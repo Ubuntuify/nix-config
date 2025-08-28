@@ -9,11 +9,19 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
-  let
-    system = "aarch64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-  in {
+  outputs =
+    inputs@{ nixpkgs, home-manager, ... }:
+    let
+      system = "aarch64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      nixosConfigurations = {
+        asahi = nixpkgs.lib.nixosSystem {
+
+        };
+      };
+
       homeConfigurations = {
         ryans = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
@@ -21,5 +29,7 @@
           modules = [ ./home.nix ];
         };
       };
+
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
     };
 }
