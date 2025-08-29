@@ -201,6 +201,6 @@
         };
       }
     ];
-    style = ./style.css;
+    style = ./waybar/style.css;
   };
 }

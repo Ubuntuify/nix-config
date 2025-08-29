@@ -6,6 +6,21 @@
   programs.fish = {
     enable = true;
     generateCompletions = true;
+
+    shellAliases = {
+      sudo = "doas";
+    };
+
+    plugins = [
+      {
+        name = "autopair";
+        src = pkgs.fishPlugins.autopair.src;
+      }
+      {
+        name = "sponge";
+        src = pkgs.fishPlugins.sponge.src;
+      }
+    ];
   };
 
   # Workaround the fact that fish is not a POSIX complaint shell, and

@@ -1,5 +1,7 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, ... }@args:
+let
+  isNixOS = builtins.hasAttr "nixosConfig" args;
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -12,7 +14,6 @@
   home.stateVersion = "25.05";
 
   home.packages = with pkgs; [
-    swayfx
     walker
     autotiling-rs
     nemo
@@ -49,27 +50,12 @@
     ./home
   ];
 
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    "${config.home.homeDirectory}/.config/sway" = {
-      source = ./dotfiles/sway;
-      recursive = true;
-    };
-    "${config.home.homeDirectory}/.config/waybar" = {
-      source = ./dotfiles/waybar;
-      recursive = true;
-    };
-  };
-
   home.sessionVariables = {
     EDITOR = "nvim";
   };
 
-  programs.lf = {
-    enable = true;
-  };
+  targets.genericLinux.enable = !isNixOS;
 
-  # Let Home Manager install and manage itself.
+  # Let Home Manager install and manage itself.appstream
   programs.home-manager.enable = true;
 }

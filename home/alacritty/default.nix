@@ -1,6 +1,11 @@
+{ pkgs, ... }:
+
 {
   programs.alacritty = {
     enable = true;
+
+    # (*)
+    # Start of configuration here.
     settings = {
       window = {
         dynamic_padding = true;
@@ -87,6 +92,10 @@
           family = "JetBrainsMono Nerd Font Mono";
           style = "ExtraBold Italic";
         };
+      };
+
+      terminal = {
+        shell = "${pkgs.fish}/bin/fish";
       };
     };
   };
