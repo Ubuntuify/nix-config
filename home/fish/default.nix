@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   programs.fish = {
     enable = true;
     generateCompletions = true;
@@ -27,6 +31,15 @@
       {
         name = "colored-man-pages";
         src = pkgs.fishPlugins.colored-man-pages.src;
+      }
+      {
+        name = "puffer-fish";
+        src = pkgs.fetchFromGitHub {
+          owner = "nickeb96";
+          repo = "puffer-fish";
+          rev = "12d062eae0ad24f4ec20593be845ac30cd4b5923";
+          sha256 = "sha256-2niYj0NLfmVIQguuGTA7RrPIcorJEPkxhH6Dhcy+6Bk=";
+        };
       }
     ];
   };
