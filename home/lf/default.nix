@@ -11,15 +11,17 @@
     };
 
     keybindings = {
+      # basic utilities (such as: rename, mkdir, touch, etc.)
       "<f-2>" = "rename";
       "a" = ":push %mkdir<space>";
       "t" = ":push %touch<space>";
+
+      # toggling hidden
       "<backspace>" = "set hidden!";
+      "." = "set hidden!";
     };
 
-    extraConfig = ''
-      setlocal ~/Downloads sortby time
-    '';
+    extraConfig = builtins.readFile ./config.lfrc; # point to separate file
   };
 
   xdg.configFile = {
@@ -36,7 +38,5 @@
 
   # adds required pkgs for previewer.sh (see ./previewer.sh)
   programs.bat.enable = true;
-  home.packages = [
-    pkgs.chafa
-  ];
+  home.packages = [pkgs.chafa pkgs.poppler-utils];
 }
