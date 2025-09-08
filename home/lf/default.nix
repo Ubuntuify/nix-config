@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.lf = {
     enable = true;
-    previewer.source = pkgs.writeShellScript "pv.sh" (builtins.readFile ./previewer.sh);
+    previewer.source = pkgs.writeScript "pv.fish" (builtins.readFile ./previewer.fish);
 
     settings = {
       icons = true;
