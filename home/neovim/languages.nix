@@ -10,4 +10,7 @@
   rust.enable = true;
   python.enable = true;
   bash.enable = true;
+
+  # specific configuration
+  nix.lsp.server = "nixd";
 }

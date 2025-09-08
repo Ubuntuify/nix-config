@@ -8,6 +8,12 @@
     style = "main";
   };
 
+  vim.options = {
+    shiftwidth = 2;
+    tabstop = 2;
+    expandtab = true;
+  };
+
   # enable plugins
   vim.diagnostics.enable = true;
   vim.lsp.enable = true;
@@ -16,9 +22,11 @@
   vim.telescope.enable = true;
   vim.autocomplete.blink-cmp.enable = true;
   vim.utility.sleuth.enable = true;
+  vim.utility.images.image-nvim.enable = true;
   vim.autopairs.nvim-autopairs.enable = true;
   vim.visuals.fidget-nvim.enable = true;
   vim.filetree.neo-tree.enable = true;
+  vim.git.gitsigns.enable = true;
 
   # settings
   vim.diagnostics.config = {
@@ -37,6 +45,10 @@
   vim.filetree.neo-tree.setupOpts = {
     enable_cursor_hijack = true;
     git_status_async = true;
+    source_selector = {
+      winbar = true;
+      statusline = false;
+    };
   };
 
   vim.languages = import ./languages.nix; # separate languages from nvf-config for easier changes;
