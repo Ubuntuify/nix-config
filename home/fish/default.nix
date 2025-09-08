@@ -1,16 +1,7 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   programs.fish = {
     enable = true;
     generateCompletions = true;
-
-    shellAliases = {
-      sudo = "doas";
-    };
-
     plugins = [
       {
         name = "autopair";
