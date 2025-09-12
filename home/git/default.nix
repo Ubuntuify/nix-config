@@ -1,19 +1,39 @@
-{
+{pkgs, ...}: {
   # basic git settings
   programs.git = {
     enable = true;
     userEmail = "ryanconrad2007@gmail.com";
     userName = "Ryan Salazar";
-
     aliases = {
       "a" = "add -A";
     };
   };
 
+  home.packages = [pkgs.onefetch];
+
   # adds and configures lazygit
   programs.lazygit = {
     enable = true;
     settings = {
+      # rose-pine theme
+      # src: https://github.com/rose-pine/lazygit/blob/main/themes/rose-pine-moon.yml
+      # converted into nix
+
+      gui.theme = {
+        activeBorderColor = ["#3e8fb0" "bold"];
+        inactiveBorderColor = ["#6e6a86"];
+        searchingActiveBorderColor = ["#ea9a97" "bold"];
+        optionsTextColor = ["#9ccfd8"];
+        selectedLineBgColor = ["#3e8fb0"];
+        inactiveViewSelectedBgColor = ["#393552" "bold"];
+        cherryPickedCommitFgColor = ["#2a273f"];
+        cherryPickedCommitBgColor = ["#ea9a97"];
+        markedBaseCommitFgColor = ["#9ccfd8"];
+        markedBaseCommitBgColor = ["#f6c177"];
+        unstagedChangesColor = ["#eb6f92"];
+        defaultFgColor = ["#e0def4"];
+      };
+
       gui.nerdFontsVersion = "3"; # enable nerd font glyphs
 
       tabwidth = 2;
