@@ -21,7 +21,6 @@
   outputs = inputs @ {
     nixpkgs,
     home-manager,
-    nvf,
     ...
   }: let
     supportedSystems = ["aarch64-linux" "aarch64-darwin" "x86_64-linux"];
@@ -31,19 +30,15 @@
           pkgs = import nixpkgs {inherit system;};
         });
   in {
-    homeConfigurations = {
-      ryans = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-linux;
-        modules = [
-          nvf.homeManagerModules.default
-          ./home.nix
-        ];
+    # Workaround for no home-manager agnostic configurations, tracked at #3075
+    # on its issue tracker. Workaround made by @scottwillmoore on GitHub.
+    packages = forEachSupportedSystem ({pkgs}: {
+      homeConfigurations.ryans = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [inputs.nvf.homeManagerModules.default ./home.nix ./home/default.nix];
       };
-    };
+    });
 
-    formatter = forEachSupportedSystem (
-      {pkgs}:
-        pkgs.alejandra
-    );
+    formatter = forEachSupportedSystem ({pkgs}: pkgs.alejandra);
   };
 }

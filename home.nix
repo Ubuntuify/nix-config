@@ -1,19 +1,9 @@
-{
-  pkgs,
-  lib,
-  ...
-} @ args: let
+{pkgs, ...} @ args: let
   isNixOS = builtins.hasAttr "nixosConfig" args;
 in {
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
   home.username = "ryans";
   home.homeDirectory = "/home/ryans";
-
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "25.05";
+  home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
     nemo
@@ -46,15 +36,11 @@ in {
     usbutils
   ];
 
-  imports = [./home/default.nix];
-
   home.sessionVariables = {
     EDITOR = "nvim";
     GROFF_NO_SGR = 1;
   };
 
   targets.genericLinux.enable = !isNixOS;
-
-  # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 }
