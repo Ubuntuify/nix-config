@@ -3,8 +3,11 @@
 set -l MIME (file --mime-type -b "$argv[1]")
 
 switch $MIME
+  # PDF files
   case \*application/pdf\*
     pdftotext "$argv[1]" -
+
+  # Compression formats
   case \*application/x-7z-compressed\*
     7zz l "$argv[1]"
   case \*application/x-tar\*
@@ -15,12 +18,18 @@ switch $MIME
     7zz l "$argv[1]"
   case \*application/zip\*
     unzip -l "$argv[1]"
+
+  # Prints any image as a sixel to terminal (won't work if the terminal emulator does not support it.)
   case image/\*
     chafa -f sixel -s "$argv[2]\x$argv[3]" --animate off --polite on "$argv[1]"
+
+  # Gives syntax highlighting to any file that is a text file.
   case \*text/\*
     bat --force-colorization --paging=never --style=changes,numbers \
       --terminal-width (math $argv[2] - 3) "$argv[1]" && false
+
+  # If the script does not recognize the format, it prints the format for debugging.
   case "*"
-    echo (set_color --bold blue)"unknown format: "(set_color normal)"$MIME"
+    echo (set_color --bold --underline blue)"unknown format:"(set_color normal)" $MIME"
 end
 
