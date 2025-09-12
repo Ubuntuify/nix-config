@@ -36,7 +36,7 @@
     body = "cd \"$(command lf -print-last-dir $argv)\"";
   };
 
-  # adds required pkgs for previewer.sh (see ./previewer.sh)
+  # adds required pkgs for previewer.sh (see ./previewer.fish)
   programs.bat.enable = true;
-  home.packages = [pkgs.chafa pkgs.poppler-utils];
+  home.packages = [pkgs.chafa pkgs.poppler-utils pkgs.file];
 }
