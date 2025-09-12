@@ -1,6 +1,11 @@
 {
   description = "Ryan's Home Manager Config (work-in-progress)";
 
+  nixConfig = {
+    extra-substituters = ["https://nix-community.cachix.org"];
+    extra-trusted-public-keys = ["nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
@@ -11,37 +16,34 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
-  outputs =
-    inputs@{
-      nixpkgs,
-      home-manager,
-      nvf,
-      ...
-    }:
-    let
-      system = "aarch64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      nixosConfigurations = {
-        asahi = nixpkgs.lib.nixosSystem {
-
-        };
+  outputs = inputs @ {
+    nixpkgs,
+    home-manager,
+    nvf,
+    ...
+  }: let
+    supportedSystems = ["aarch64-linux" "aarch64-darwin" "x86_64-linux"];
+    forEachSupportedSystem = f:
+      nixpkgs.lib.genAttrs supportedSystems (system:
+        f {
+          pkgs = import nixpkgs {inherit system;};
+        });
+  in {
+    homeConfigurations = {
+      ryans = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.aarch64-linux;
+        modules = [
+          nvf.homeManagerModules.default
+          ./home.nix
+        ];
       };
-
-      homeConfigurations = {
-        ryans = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            nvf.homeManagerModules.default
-            ./home.nix
-          ];
-        };
-      };
-
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
     };
+
+    formatter = forEachSupportedSystem (
+      {pkgs}:
+        pkgs.alejandra
+    );
+  };
 }

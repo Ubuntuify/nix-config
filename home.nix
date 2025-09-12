@@ -1,4 +1,8 @@
-{pkgs, ...} @ args: let
+{
+  pkgs,
+  lib,
+  ...
+} @ args: let
   isNixOS = builtins.hasAttr "nixosConfig" args;
 in {
   # Home Manager needs a bit of information about you and the paths it should
@@ -42,9 +46,7 @@ in {
     usbutils
   ];
 
-  imports = [
-    ./home
-  ];
+  imports = [./home/default.nix];
 
   home.sessionVariables = {
     EDITOR = "nvim";
