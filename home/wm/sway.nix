@@ -10,14 +10,16 @@ in
       walker
       autotiling-rs
       grim
-      sway-contrib.inactive-windows-transparency
-      sway-contrib.grimshot
+      #sway-contrib.inactive-windows-transparency
+      #sway-contrib.grimshot
     ];
 
     wayland.windowManager.sway = {
       enable = true;
       package = pkgs.swayfx;
-      checkConfig = false; # WORKAROUND: TODO: REMOVE WHEN FIXED UPSTREAM
+      # Workaround #5379 in nix-community/home-manager specifically
+      # with pkgs.swayfx
+      checkConfig = false;
       wrapperFeatures = {
         base = true;
         gtk = true;
