@@ -8,20 +8,20 @@ if test $MIME = "inode/symlink"
 end
 
 switch $MIME
-  # PDF files
+  # PDF files (uses poppler-utils)
   case "*application/pdf*"
     pdftotext "$argv[1]" -
 
   # Compression formats
   case "*application/x-7z-compressed*"
     7zz l "$argv[1]"
-  case "*application/x-tar\*"
+  case "*application/x-tar*"
     tar -tvf "$argv[1]"
-  case "*application/x-compressed-tar\*" "*application/x-*-compressed-tar*"
+  case "*application/x-compressed-tar*" "*application/x-*-compressed-tar*"
     tar -tvf "$argv[1]"
-  case "*application/vnd.rar\*"
+  case "*application/vnd.rar*"
     7zz l "$argv[1]"
-  case "*application/zip\*"
+  case "*application/zip*"
     unzip -l "$argv[1]"
 
   # Prints any image as a sixel to terminal (won't work if the terminal emulator does not support it.)
