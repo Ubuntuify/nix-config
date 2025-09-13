@@ -41,7 +41,14 @@
     packages = forEachSupportedSystem ({pkgs}: {
       homeConfigurations.ryans = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = [inputs.nvf.homeManagerModules.default ./home.nix ./home/default.nix];
+        modules = [
+          inputs.nvf.homeManagerModules.default
+          ./home/default.nix
+          {
+            hm-options.user = "ryans";
+            hm-options.isGraphical = true;
+          }
+        ];
         extraSpecialArgs = specialArgs;
       };
     });

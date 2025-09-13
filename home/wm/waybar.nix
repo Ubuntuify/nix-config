@@ -1,11 +1,13 @@
 {
   pkgs,
+  config,
   lib,
   ...
 }: let
   isLinux = pkgs.stdenv.isLinux;
+  isGraphical = config.hm-options.isGraphical;
 in
-  lib.mkIf isLinux {
+  lib.mkIf (isLinux && isGraphical) {
     programs.waybar = {
       enable = true;
       settings = [

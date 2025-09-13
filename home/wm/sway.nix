@@ -1,11 +1,13 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: let
   isLinux = pkgs.stdenv.isLinux;
+  isGraphical = config.hm-options.isGraphical;
 in
-  lib.mkIf isLinux {
+  lib.mkIf (isLinux && isGraphical) {
     home.packages = with pkgs; [
       walker
       autotiling-rs
