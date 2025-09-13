@@ -4,5 +4,5 @@
     settings = import ./nvf-config.nix;
   };
 
-  home.packages = [pkgs.ueberzugpp];
+  home.packages = [pkgs.ueberzugpp pkgs.imagemagick];
 }

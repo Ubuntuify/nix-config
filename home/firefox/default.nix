@@ -1,9 +1,16 @@
-{inputs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   programs.firefox = {
     enable = true;
     profiles.ryan = {
-      extensions = [
-        inputs.firefox-addons.${builtins.currentSystem}.ublock-origin-upstream
+      extensions = with inputs.firefox-addons.packages.${pkgs.stdenv.system}; [
+        ublock-origin-upstream
+        rust-search-extension
+        sponsorblock
+        return-youtube-dislikes
       ];
     };
   };

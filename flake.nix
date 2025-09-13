@@ -1,5 +1,5 @@
 {
-  description = "Ryan's Home Manager Config (work-in-progress)";
+  description = "Ryan's Nix configuration flake";
 
   nixConfig = {
     extra-substituters = ["https://nix-community.cachix.org"];
@@ -33,6 +33,7 @@
         f {
           pkgs = import nixpkgs {inherit system;};
         });
+    specialArgs = {inherit inputs;};
   in {
     # Workaround for no home-manager agnostic configurations, tracked at #3075
     # on its issue tracker. Workaround made by @scottwillmoore on GitHub.
@@ -40,9 +41,36 @@
       homeConfigurations.ryans = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [inputs.nvf.homeManagerModules.default ./home.nix ./home/default.nix];
-        extraSpecialArgs = {inherit inputs;};
+        extraSpecialArgs = specialArgs;
       };
     });
+
+    nixosConfigurations.Afina = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+    };
+
+    nixosConfigurations.Andromeda = nixpkgs.lib.nixosSystem {
+      inherit specialArgs;
+      system = "x86_64-linux";
+      modules = [
+        ./nix/system/andromeda.nix
+        home-manager.nixosModules.home-manager
+        ./nix/modules/home-meta.nix
+        {home-manager.extraSpecialArgs = specialArgs;}
+      ];
+    };
+
+    nixosConfigurations.Cassiopeia = nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
+    };
+
+    nixosConfigurations.Persephone =
+      nixpkgs.lib.nixosSystem {
+      };
+
+    nixosConfigurations.Melinoe = nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
+    };
 
     formatter = forEachSupportedSystem ({pkgs}: pkgs.alejandra);
   };

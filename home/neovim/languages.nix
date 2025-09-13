@@ -15,7 +15,6 @@
   nix.lsp.server = "nixd";
   nix.lsp.options = {
     home_manager = {
-      expr = "(builtins.getFlake \"${global.nixConfigDirectory}\").homeConfigurations.\"${global.username}\".options";
     };
   };
 }
