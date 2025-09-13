@@ -8,6 +8,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -55,7 +56,7 @@
       modules = [
         ./nix/system/andromeda.nix
         home-manager.nixosModules.home-manager
-        ./nix/modules/home-meta.nix
+        inputs.nixos-wsl.nixosModules.default
         {home-manager.extraSpecialArgs = specialArgs;}
       ];
     };

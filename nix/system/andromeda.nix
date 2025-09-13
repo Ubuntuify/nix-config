@@ -4,23 +4,15 @@
   pkgs,
   ...
 }: {
-  imports = [<nixos-wsl/modules>];
+  wsl.enable = true;
+  wsl.useWindowsDriver = true;
+  wsl.docker-desktop.enable = true;
+  wsl.startMenuLaunchers = true;
 
-  wsl = {
-    enable = true;
-    useWindowsDriver = true;
-    docker-desktop.enable = true;
-    startMenuLaunchers = true;
-    defaultUser = "ryans";
-  };
+  wsl.defaultUser = "ryans";
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-
-  home-manager.users.ryans = lib.mkMerge [
-    ../../home.nix
-    ../../home/common.nix
-  ];
 
   networking.hostName = "Andromeda";
 
