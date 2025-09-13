@@ -42,6 +42,10 @@
     lspconfig.enable = true;
   };
 
+  vim.utility.images.image-nvim.setupOpts = {
+    backend = "sixel";
+  };
+
   vim.filetree.neo-tree.setupOpts = {
     enable_cursor_hijack = true;
     git_status_async = true;
