@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   defaultUser = "ryans";
@@ -21,6 +22,7 @@ in {
       hm-options.isGraphical = false;
     }
     ../../home/default.nix
+    inputs.nvf.homeManagerModules.default
   ];
 
   networking.hostName = "Andromeda";
