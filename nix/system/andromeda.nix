@@ -6,6 +6,12 @@
 }: let
   defaultUser = "ryans";
 in {
+  imports = [
+    ../common/nix-optimize-gc.nix
+    ../wsl/gpu-accel.nix
+    ../wsl/nvidia.nix
+  ];
+
   wsl.enable = true;
   wsl.useWindowsDriver = true;
   wsl.docker-desktop.enable = true;
@@ -28,6 +34,11 @@ in {
   networking.hostName = "Andromeda";
 
   environment.systemPackages = [pkgs.aria2 pkgs.wget];
+
+  nixpkgs.config = {
+    allowUnfree = true;
+    cudaSupport = true;
+  };
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   system.stateVersion = "25.05";
