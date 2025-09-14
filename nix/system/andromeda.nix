@@ -27,6 +27,8 @@ in {
 
   networking.hostName = "Andromeda";
 
+  environment.systemPackages = [pkgs.aria2 pkgs.wget];
+
   nix.settings.experimental-features = ["nix-command" "flakes"];
   system.stateVersion = "25.05";
 }
