@@ -59,4 +59,29 @@ in
     programs.swaylock = {
       enable = true;
     };
+
+    services.swayidle = {
+      enable = true;
+      events = [
+        {
+          event = "after-resume";
+          command = "${config.wayland.windowManager.sway.package}/bin/swaymsg \"output * dpms on\"";
+        }
+        {
+          event = "before-sleep";
+          command = "${pkgs.swaylock}/bin/swaylock";
+        }
+      ];
+      timeouts = [
+        {
+          timeout = 300; # five minutes
+          command = "${pkgs.swaylock}/bin/swaylock";
+        }
+        {
+          timeout = 600; # ten minutes
+          command = "${config.wayland.windowManager.sway.package}/bin/swaymsg \"output * dpms off\"";
+          resumeCommand = "${config.wayland.windowManager.sway.package}/bin/swaymsg \"output * dpms on\"";
+        }
+      ];
+    };
   }

@@ -1,5 +1,0 @@
-# This file is a configuration file to be added onto lfrc, when
-# home-manager does not provide sufficient settings.
-
-setlocal ~/Downloads sortby ctime
-

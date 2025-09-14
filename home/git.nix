@@ -9,8 +9,6 @@
     };
   };
 
-  home.packages = [pkgs.onefetch];
-
   # adds and configures lazygit
   programs.lazygit = {
     enable = true;
@@ -64,4 +62,6 @@
       };
     };
   };
+
+  home.packages = [pkgs.onefetch];
 }

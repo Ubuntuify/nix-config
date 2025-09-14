@@ -1,8 +1,3 @@
-# Kept for backwards compatibility, and is a naive approach
-# to importing home-manager plugins.
-#
-# If you are specifying a specific machine's home-manager
-# config, always default to specifying the modules directly.
 {
   config,
   lib,
@@ -13,15 +8,15 @@ with lib; let
   cfg = config.hm-options;
 in {
   imports = [
-    ./alacritty/default.nix
-    ./firefox/default.nix
-    ./fish/default.nix
-    ./git/default.nix
-    ./lf/default.nix
-    ./neovim/default.nix
-    ./wm/sway.nix
-    ./wm/waybar.nix
+    ./fish.nix
+    ./git.nix
+    ./lf.nix
+    ./neovim.nix
     ./utilities.nix
+    ./graphical/alacritty.nix
+    ./graphical/sway.nix
+    ./graphical/waybar.nix
+    ./graphical/firefox.nix
   ];
 
   options.hm-options = {
@@ -38,6 +33,8 @@ in {
 
     targets.genericLinux.enable = !isNixOS;
     programs.home-manager.enable = true;
+
+    xdg.enable = true;
 
     home.stateVersion = "25.11";
   };
