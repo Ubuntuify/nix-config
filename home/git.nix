@@ -1,5 +1,4 @@
 {pkgs, ...}: {
-  # basic git settings
   programs.git = {
     enable = true;
     userEmail = "ryanconrad2007@gmail.com";
@@ -9,7 +8,6 @@
     };
   };
 
-  # adds and configures lazygit
   programs.lazygit = {
     enable = true;
     settings = {
@@ -61,6 +59,11 @@
         editAtLineAndWait = "nvim {{filename}} +{{line}}";
       };
     };
+  };
+
+  programs.gh = {
+    enable = true;
+    gitCredentialHelper.enable = true;
   };
 
   home.packages = [pkgs.onefetch];

@@ -75,7 +75,7 @@
     };
   };
 
-  home.packages = [pkgs.ueberzugpp pkgs.imagemagick];
+  home.packages = [pkgs.imagemagick];
 
   home.sessionVariables.EDITOR = "nvim";
 }

@@ -22,7 +22,7 @@ in
         };
       };
     })
-    (lib.mkIf isLinux {
+    (lib.mkIf (isLinux && isGraphical) {
       xdg.mimeApps = {
         enable = true;
         associations.added = {

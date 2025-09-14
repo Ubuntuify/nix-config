@@ -9,6 +9,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    apple-silicon.url = "github:nix-community/nixos-apple-silicon/main";
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,6 +30,7 @@
 
   outputs = inputs @ {
     nixpkgs,
+    nix-darwin,
     home-manager,
     ...
   }: let
@@ -32,7 +38,13 @@
     forEachSupportedSystem = f:
       nixpkgs.lib.genAttrs supportedSystems (system:
         f {
-          pkgs = import nixpkgs {inherit system;};
+          pkgs = import nixpkgs {
+            inherit system;
+            config = {
+              allowUnfree = true;
+              cudaSupport = true;
+            };
+          };
         });
     specialArgs = {inherit inputs;};
   in {
@@ -53,31 +65,41 @@
       };
     });
 
-    nixosConfigurations.Afina = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-    };
-
-    nixosConfigurations.Andromeda = nixpkgs.lib.nixosSystem {
-      inherit specialArgs;
-      system = "x86_64-linux";
-      modules = [
-        ./nix/system/andromeda.nix
-        home-manager.nixosModules.home-manager
-        inputs.nixos-wsl.nixosModules.default
-        {home-manager.extraSpecialArgs = specialArgs;}
-      ];
-    };
-
-    nixosConfigurations.Cassiopeia = nixpkgs.lib.nixosSystem {
-      system = "aarch64-linux";
-    };
-
-    nixosConfigurations.Persephone =
-      nixpkgs.lib.nixosSystem {
+    nixosConfigurations = {
+      Afina = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
       };
 
-    nixosConfigurations.Melinoe = nixpkgs.lib.nixosSystem {
-      system = "aarch64-linux";
+      Andromeda = nixpkgs.lib.nixosSystem {
+        inherit specialArgs;
+        system = "x86_64-linux";
+        modules = [
+          ./nix/system/andromeda.nix
+          home-manager.nixosModules.home-manager
+          inputs.nixos-wsl.nixosModules.default
+          {home-manager.extraSpecialArgs = specialArgs;}
+        ];
+      };
+
+      Cassiopeia = nixpkgs.lib.nixosSystem {
+        inherit specialArgs;
+        system = "aarch64-linux";
+        modules = [inputs.nixos-wsl.nixosModules.default];
+      };
+
+      Persephone =
+        nixpkgs.lib.nixosSystem {
+        };
+
+      Melinoe = nixpkgs.lib.nixosSystem {
+        inherit specialArgs;
+        system = "aarch64-linux";
+        modules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
+      };
+    };
+
+    darwinConfigurations.Macbook = nix-darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
     };
 
     formatter = forEachSupportedSystem ({pkgs}: pkgs.alejandra);
