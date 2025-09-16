@@ -74,7 +74,7 @@
         inherit specialArgs;
         system = "x86_64-linux";
         modules = [
-          ./nix/system/andromeda.nix
+          ./nixos/system/andromeda.nix
           home-manager.nixosModules.home-manager
           inputs.nixos-wsl.nixosModules.default
           {home-manager.extraSpecialArgs = specialArgs;}
