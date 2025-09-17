@@ -71,6 +71,11 @@
         bash.enable = true;
 
         nix.lsp.server = "nixd";
+        nix.lsp.options = {
+          nixos.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.Andromeda.options";
+          home_manager.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.Andromeda.options.home-manager.users.type.getSubOptions []";
+          nix-darwin.expr = "(builtins.getFlake (builtins.toString ./.)).darwinConfigurations.Macbook.options";
+        };
       };
     };
   };
