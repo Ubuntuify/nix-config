@@ -1,4 +1,9 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}: let
   userEmail = "ryanconrad2007@gmail.com";
   userName = "Ryan Salazar";
 in {
@@ -7,10 +12,23 @@ in {
     inherit userEmail;
 
     enable = true;
+    signing.format = "ssh";
+    signing.signByDefault = true;
+
+    extraConfig = {
+      gpg.ssh.allowedSignersFile = "${config.home.homeDirectory}/.ssh/allowed_signers";
+    };
+
     aliases = {
-      "a" = "add -A";
+      "a" = "add --all";
+      "p" = "push";
+      "pf" = "push --force";
     };
   };
+
+  home.activation.gitEncryptSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    run ${builtins.toPath ../scripts/activation/setup-encrypt-git.bash}
+  '';
 
   programs.lazygit = {
     enable = true;
@@ -64,7 +82,6 @@ in {
       };
     };
   };
-
   programs.fish.shellAliases.lg = "lazygit";
 
   programs.gh = {
