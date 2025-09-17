@@ -101,6 +101,11 @@
 
     darwinConfigurations.Macbook = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
+      modules = [
+        ./darwin/profile/Macbook.nix
+        home-manager.darwinModules.home-manager
+        {home-manager.extraSpecialArgs = specialArgs;}
+      ];
     };
 
     formatter = forEachSupportedSystem ({pkgs}: pkgs.alejandra);
