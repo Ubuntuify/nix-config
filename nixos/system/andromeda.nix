@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  inputs,
+  mkHomeModules,
   ...
 }: let
   defaultUser = "ryans";
@@ -22,23 +22,15 @@ in {
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 
-  home-manager.users.${defaultUser} = lib.mkMerge [
-    {
-      hm-options.user = defaultUser;
-      hm-options.isGraphical = false;
-    }
-    ../../home/default.nix
-    inputs.nvf.homeManagerModules.default
-  ];
+  home-manager.users.${defaultUser} =
+    lib.mkMerge (mkHomeModules {user = defaultUser;});
 
   networking.hostName = "Andromeda";
 
   environment.systemPackages = [pkgs.aria2 pkgs.wget];
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    cudaSupport = true;
-  };
+  nixpkgs.config.allowUnfree = true;
+  programs.command-not-found.enable = true;
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   system.stateVersion = "25.05";

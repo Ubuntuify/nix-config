@@ -5,7 +5,7 @@
   pkgs,
   ...
 }: let
-  isGraphical = config.hm-options.isGraphical;
+  isGraphical = config.hm-options.system.graphical;
   isLinux = pkgs.stdenv.isLinux;
 in
   lib.mkMerge [

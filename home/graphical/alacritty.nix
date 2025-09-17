@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  isGraphical = config.hm-options.isGraphical;
+  isGraphical = config.hm-options.system.graphical;
 in
   mkIf isGraphical
   {

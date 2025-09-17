@@ -24,7 +24,7 @@ in {
       type = types.str;
       description = "User of this home-manager configuration";
     };
-    isGraphical = mkEnableOption "graphical home-manager modules";
+    system = {graphical = mkEnableOption "graphical home-manager modules";};
   };
 
   config = {

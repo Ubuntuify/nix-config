@@ -5,7 +5,7 @@
   ...
 }: let
   isLinux = pkgs.stdenv.isLinux;
-  isGraphical = config.hm-options.isGraphical;
+  isGraphical = config.hm-options.system.graphical;
 in
   lib.mkIf (isLinux && isGraphical) {
     home.packages = with pkgs; [

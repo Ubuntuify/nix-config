@@ -32,4 +32,6 @@
     enable = true;
     libraries = [wsl-lib];
   };
+
+  nixpkgs.config.cudaSupport = true;
 }

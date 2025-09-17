@@ -1,8 +1,12 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  userEmail = "ryanconrad2007@gmail.com";
+  userName = "Ryan Salazar";
+in {
   programs.git = {
+    inherit userName;
+    inherit userEmail;
+
     enable = true;
-    userEmail = "ryanconrad2007@gmail.com";
-    userName = "Ryan Salazar";
     aliases = {
       "a" = "add -A";
     };
@@ -60,6 +64,8 @@
       };
     };
   };
+
+  programs.fish.shellAliases.lg = "lazygit";
 
   programs.gh = {
     enable = true;

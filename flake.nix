@@ -40,27 +40,28 @@
         f {
           pkgs = import nixpkgs {
             inherit system;
-            config = {
-              allowUnfree = true;
-              cudaSupport = true;
-            };
+            config = {allowUnfree = true;};
           };
         });
-    specialArgs = {inherit inputs;};
+    mkHomeModules = options: [
+      inputs.nvf.homeManagerModules.default
+      ./home/default.nix
+      {hm-options = options;}
+    ];
+    specialArgs = {
+      inherit inputs;
+      inherit mkHomeModules;
+    };
   in {
     # Workaround for no home-manager agnostic configurations, tracked at #3075
     # on its issue tracker. Workaround made by @scottwillmoore on GitHub.
     packages = forEachSupportedSystem ({pkgs}: {
       homeConfigurations.ryans = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = [
-          inputs.nvf.homeManagerModules.default
-          ./home/default.nix
-          {
-            hm-options.user = "ryans";
-            hm-options.isGraphical = true;
-          }
-        ];
+        modules = mkHomeModules {
+          user = "ryans";
+          system.graphical = true;
+        };
         extraSpecialArgs = specialArgs;
       };
     });
@@ -87,9 +88,9 @@
         modules = [inputs.nixos-wsl.nixosModules.default];
       };
 
-      Persephone =
-        nixpkgs.lib.nixosSystem {
-        };
+      Persephone = nixpkgs.lib.nixosSystem {
+        inherit specialArgs;
+      };
 
       Melinoe = nixpkgs.lib.nixosSystem {
         inherit specialArgs;
