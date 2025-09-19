@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   programs.bat = {
     enable = true;
     config.theme = "Nord";
@@ -29,24 +33,31 @@
     ignores = [".git/" "*.bak" ".DS_Store"];
   };
 
-  home.packages = with pkgs; [
-    zip
-    xz
-    unzip
-    _7zz
-    file
-    which
-    tree
-    gnused
-    gnutar
-    gawk
-    zstd
-    gnupg
-    btop
-    lsof
-    ethtool
-    lm_sensors
-    pciutils
-    usbutils
-  ];
+  home.packages = with pkgs;
+    [
+      # Packages that exist both on Linux and Darwin systems.
+      zip
+      xz
+      unzip
+      _7zz
+      file
+      which
+      tree
+      gnused
+      gnutar
+      gawk
+      zstd
+      gnupg
+      btop
+    ]
+    ++
+    # Packages that only exist on Linux, and should not be added to
+    # home.packages on darwin systems.
+    (lib.optional pkgs.stdenv.isLinux [
+      lsof
+      ethtool
+      lm_sensors
+      pciutils
+      usbutils
+    ]);
 }

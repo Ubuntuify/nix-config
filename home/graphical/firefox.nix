@@ -5,24 +5,25 @@
   pkgs,
   ...
 }: let
-  isGraphical = config.hm-options.system.graphical;
-  isLinux = pkgs.stdenv.isLinux;
+  cfg = config.home-manager-options;
+  firefox-addons = inputs.nur.legacyPackages.${pkgs.stdenv.system}.repos.rycee.firefox-addons;
 in
-  lib.mkMerge [
-    (lib.mkIf isGraphical {
+  lib.mkIf cfg.system.graphical (lib.mkMerge [
+    {
       programs.firefox = {
         enable = true;
         profiles.ryan = {
-          extensions.packages = with inputs.firefox-addons.packages.${pkgs.stdenv.system}; [
+          extensions.packages = with firefox-addons; [
             ublock-origin-upstream
+            chrome-mask
             rust-search-extension
             sponsorblock
             return-youtube-dislikes
           ];
         };
       };
-    })
-    (lib.mkIf (isLinux && isGraphical) {
+    }
+    (lib.mkIf pkgs.stdenv.isLinux {
       xdg.mimeApps = {
         enable = true;
         associations.added = {
@@ -30,4 +31,4 @@ in
         };
       };
     })
-  ]
+  ])

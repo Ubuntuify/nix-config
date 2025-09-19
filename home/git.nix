@@ -3,16 +3,20 @@
   lib,
   config,
   ...
-}: let
+} @ args: let
   userEmail = "ryanconrad2007@gmail.com";
   userName = "Ryan Salazar";
+  pinentryPackage =
+    if !pkgs.stdenv.isDarwin
+    then pkgs.pinentry-tty
+    else pkgs.pinentry_mac;
 in {
   programs.git = {
     inherit userName;
     inherit userEmail;
 
     enable = true;
-    signing.format = "ssh";
+    signing.format = "openpgp";
     signing.signByDefault = true;
 
     extraConfig = {
@@ -26,8 +30,8 @@ in {
     };
   };
 
-  home.activation.gitEncryptSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    run ${builtins.toPath ../scripts/activation/setup-encrypt-git.bash}
+  home.activation.gitSignSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    run ${builtins.toPath ../scripts/activation/setup-sign-git.bash}
   '';
 
   programs.lazygit = {
@@ -89,5 +93,21 @@ in {
     gitCredentialHelper.enable = true;
   };
 
-  home.packages = [pkgs.onefetch];
+  programs.gpg = {
+    enable = true;
+    homedir = "${config.xdg.dataHome}/gnupg";
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    pinentry.package =
+      if builtins.hasAttr "darwinConfig" args
+      then null
+      else pinentryPackage;
+    extraConfig = lib.mkIf (builtins.hasAttr "darwinConfig" args) ''
+      pinentry-program ${args.darwinConfig.homebrew.brewPrefix}/pinentry-touchid
+    '';
+  };
+
+  home.packages = [pkgs.onefetch pinentryPackage];
 }

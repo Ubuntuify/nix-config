@@ -1,11 +1,12 @@
 {
+  pkgs,
   config,
   lib,
   ...
 } @ args:
 with lib; let
   isNixOS = builtins.hasAttr "nixosConfig" args;
-  cfg = config.hm-options;
+  cfg = config.home-manager-options;
 in {
   imports = [
     ./fish.nix
@@ -19,7 +20,7 @@ in {
     ./graphical/firefox.nix
   ];
 
-  options.hm-options = {
+  options.home-manager-options = {
     user = mkOption {
       type = types.str;
       description = "User of this home-manager configuration";
@@ -29,9 +30,17 @@ in {
 
   config = {
     home.username = cfg.user;
-    home.homeDirectory = "/home/${cfg.user}";
+    home.homeDirectory = mkDefault (
+      if pkgs.stdenv.isDarwin
+      then "/Users/${cfg.user}"
+      else "/home/${cfg.user}"
+    ); # This needs to be set with mkDefault, as the nix-darwin module of home-manager
+    # will throw an error otherwise if this is set.
 
-    targets.genericLinux.enable = !isNixOS;
+    # This option does not exist on darwin systems, therefore should not be set if the
+    # host system is not Linux.
+    targets.genericLinux.enable = mkIf (pkgs.stdenv.isLinux) (!isNixOS);
+
     programs.home-manager.enable = true;
 
     xdg.enable = true;

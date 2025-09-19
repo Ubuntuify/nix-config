@@ -5,104 +5,76 @@
   ...
 }:
 with lib; let
-  isGraphical = config.hm-options.system.graphical;
+  cfg = config.home-manager-options;
 in
-  mkIf isGraphical
+  mkIf cfg.system.graphical
   {
     programs.alacritty = {
       enable = true;
       package = pkgs.alacritty-graphics; # use a fork with sixel support (display images)
-      settings = {
-        window = {
-          dynamic_padding = true;
-          padding = {
-            x = 5;
-            y = 5;
-          };
-          opacity = 1;
-          decorations = "none";
-        };
-
-        env.TERM = "xterm-256color";
-
-        scrolling = {
-          history = 10000;
-          multiplier = 3;
-        };
-
-        colors = {
-          draw_bold_text_with_bright_colors = true;
-
-          primary = {
-            background = "#222222";
-            foreground = "#fff4d2";
+      settings = lib.mkMerge [
+        (builtins.fromTOML (builtins.readFile ../../themes/alacritty/rose-pine.toml))
+        (lib.mkIf pkgs.stdenv.isDarwin {
+          window.blur = true;
+          window.opacity = 0.8;
+          window.decorations = "Transparent";
+        })
+        {
+          window = {
+            dynamic_padding = true;
+            padding = {
+              x = 5;
+              y = 5;
+            };
           };
 
-          cursor = {
-            text = "#bdae93";
-            cursor = "#665c54";
+          env.TERM = "xterm-256color";
+
+          scrolling = {
+            history = 10000;
+            multiplier = 3;
           };
 
-          normal = {
-            black = "#1d2021";
-            red = "#cc241d";
-            green = "#98971a";
-            yellow = "#d79921";
-            blue = "#458588";
-            magenta = "#b16286";
-            cyan = "#689d6a";
-            white = "#a89984";
+          font = {
+            size = 12;
+
+            offset = {
+              x = 0;
+              y = -3;
+            };
+
+            glyph_offset = {
+              x = 0;
+              y = -1;
+            };
+
+            normal = {
+              family = "JetBrainsMono Nerd Font Mono";
+              style = "Regular";
+            };
+
+            bold = {
+              family = "JetBrainsMono Nerd Font Mono";
+              style = "Bold";
+            };
+
+            italic = {
+              family = "JetBrainsMono Nerd Font Mono";
+              style = "Italic";
+            };
+
+            bold_italic = {
+              family = "JetBrainsMono Nerd Font Mono";
+              style = "Bold Italic";
+            };
           };
 
-          bright = {
-            black = "#a89984";
-            red = "#fb4934";
-            green = "#b8bb26";
-            yellow = "#fabd2f";
-            blue = "#83a598";
-            magenta = "#d3869b";
-            cyan = "#8ec07c";
-            white = "#fff4d2";
+          terminal = {
+            shell = "${pkgs.fish}/bin/fish";
           };
-        };
-
-        font = {
-          size = 12;
-
-          offset = {
-            x = 0;
-            y = -3;
-          };
-
-          glyph_offset = {
-            x = 0;
-            y = -1;
-          };
-
-          normal = {
-            family = "JetBrainsMono Nerd Font Mono";
-            style = "SemiBold";
-          };
-
-          bold = {
-            family = "JetBrainsMono Nerd Font Mono";
-            style = "ExtraBold";
-          };
-
-          italic = {
-            family = "JetBrainsMono Nerd Font Mono";
-            style = "SemiBold Italic";
-          };
-
-          bold_italic = {
-            family = "JetBrainsMono Nerd Font Mono";
-            style = "ExtraBold Italic";
-          };
-        };
-
-        terminal = {
-          shell = "${pkgs.fish}/bin/fish";
-        };
-      };
+        }
+      ];
     };
+
+    home.packages = [pkgs.nerd-fonts.jetbrains-mono];
   }

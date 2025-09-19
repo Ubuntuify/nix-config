@@ -4,10 +4,9 @@
   lib,
   ...
 }: let
-  isLinux = pkgs.stdenv.isLinux;
-  isGraphical = config.hm-options.system.graphical;
+  cfg = config.home-manager-options;
 in
-  lib.mkIf (isLinux && isGraphical) {
+  lib.mkIf (cfg.system.graphical && pkgs.stdenv.isLinux) {
     programs.waybar = {
       enable = true;
       settings = [

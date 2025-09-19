@@ -14,6 +14,7 @@
       url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,13 +23,14 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    nur = {
+      url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = inputs @ {
+    self,
     nixpkgs,
     nix-darwin,
     home-manager,
@@ -46,9 +48,10 @@
     mkHomeModules = options: [
       inputs.nvf.homeManagerModules.default
       ./home/default.nix
-      {hm-options = options;}
+      {home-manager-options = options;}
     ];
     specialArgs = {
+      inherit self;
       inherit inputs;
       inherit mkHomeModules;
     };
@@ -100,10 +103,12 @@
     };
 
     darwinConfigurations.Macbook = nix-darwin.lib.darwinSystem {
+      inherit specialArgs;
       system = "aarch64-darwin";
       modules = [
         ./darwin/profile/Macbook.nix
         home-manager.darwinModules.home-manager
+        inputs.nix-homebrew.darwinModules.nix-homebrew
         {home-manager.extraSpecialArgs = specialArgs;}
       ];
     };
