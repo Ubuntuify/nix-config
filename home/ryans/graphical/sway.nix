@@ -11,19 +11,28 @@ in
       walker
       autotiling-rs
       grim
-      #sway-contrib.inactive-windows-transparency
-      #sway-contrib.grimshot
+      sway-contrib.inactive-windows-transparency
+      sway-contrib.grimshot
     ];
 
     wayland.windowManager.sway = {
       enable = true;
       package = pkgs.swayfx;
+
       # Workaround #5379 in nix-community/home-manager specifically
       # with pkgs.swayfx
       checkConfig = false;
+
       wrapperFeatures = {
         base = true;
         gtk = true;
+      };
+
+      config = {
+        modifier = "Mod4";
+        terminal = "${pkgs.alacritty}/bin/alacritty";
+
+        bars = [{command = "${pkgs.waybar}/bin/waybar";}];
       };
     };
 
@@ -36,9 +45,13 @@ in
 
     home.pointerCursor = let
       getFrom = url: hash: name: {
+        inherit name;
+
         gtk.enable = true;
         x11.enable = true;
-        name = name;
+        sway.enable = true;
+        hyprcursor.enable = true;
+
         size = 48;
         package = pkgs.runCommand "moveUp" {} ''
           mkdir -p $out/share/icons

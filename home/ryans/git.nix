@@ -31,7 +31,7 @@ in {
   };
 
   home.activation.gitSignSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    run ${builtins.toPath ../scripts/activation/setup-sign-git.bash}
+    run ${builtins.toPath ../../scripts/activation/setup-sign-git.bash}
   '';
 
   programs.lazygit = {

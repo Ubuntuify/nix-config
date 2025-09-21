@@ -29,90 +29,33 @@
     };
   };
 
-  outputs = inputs @ {
-    self,
-    nixpkgs,
-    nix-darwin,
-    home-manager,
-    ...
-  }: let
-    supportedSystems = ["aarch64-linux" "aarch64-darwin" "x86_64-linux"];
-    forEachSupportedSystem = f:
-      nixpkgs.lib.genAttrs supportedSystems (system:
-        f {
-          pkgs = import nixpkgs {
-            inherit system;
-            config = {allowUnfree = true;};
-          };
-        });
-    mkHomeModules = options: [
-      inputs.nvf.homeManagerModules.default
-      ./home/default.nix
-      {home-manager-options = options;}
-    ];
-    specialArgs = {
-      inherit self;
-      inherit inputs;
-      inherit mkHomeModules;
-    };
+  outputs = inputs @ {self, ...}: let
+    inherit (self) outputs;
+    libx = import ./lib {inherit inputs outputs;};
   in {
-    # Workaround for no home-manager agnostic configurations, tracked at #3075
-    # on its issue tracker. Workaround made by @scottwillmoore on GitHub.
-    packages = forEachSupportedSystem ({pkgs}: {
-      homeConfigurations.ryans = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = mkHomeModules {
-          user = "ryans";
-          system.graphical = true;
-        };
-        extraSpecialArgs = specialArgs;
-      };
-    });
-
     nixosConfigurations = {
-      Afina = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+      Afina = libx.mkNixos {hostname = "Afina";};
+      Andromeda = libx.mkNixos {
+        hostname = "Andromeda";
+        supportModules = [inputs.nixos-wsl.nixosModules.default];
       };
-
-      Andromeda = nixpkgs.lib.nixosSystem {
-        inherit specialArgs;
-        system = "x86_64-linux";
-        modules = [
-          ./nixos/system/andromeda.nix
-          home-manager.nixosModules.home-manager
-          inputs.nixos-wsl.nixosModules.default
-          {home-manager.extraSpecialArgs = specialArgs;}
-        ];
-      };
-
-      Cassiopeia = nixpkgs.lib.nixosSystem {
-        inherit specialArgs;
+      Cassiopeia = libx.mkNixos {
+        hostname = "Cassiopeia";
         system = "aarch64-linux";
-        modules = [inputs.nixos-wsl.nixosModules.default];
+        supportModules = [inputs.nixos-wsl.nixosModules.default];
       };
-
-      Persephone = nixpkgs.lib.nixosSystem {
-        inherit specialArgs;
-      };
-
-      Melinoe = nixpkgs.lib.nixosSystem {
-        inherit specialArgs;
+      Persephone = libx.mkNixos {hostname = "Persephone";};
+      Melinoe = libx.mkNixOs {
+        hostname = "Melinoe";
         system = "aarch64-linux";
-        modules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
+        supportModules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
       };
     };
 
-    darwinConfigurations.Macbook = nix-darwin.lib.darwinSystem {
-      inherit specialArgs;
-      system = "aarch64-darwin";
-      modules = [
-        ./darwin/profile/Macbook.nix
-        home-manager.darwinModules.home-manager
-        inputs.nix-homebrew.darwinModules.nix-homebrew
-        {home-manager.extraSpecialArgs = specialArgs;}
-      ];
+    darwinConfigurations = {
+      Pomegranate = libx.mkDarwin {hostname = "Pomegranate";};
     };
 
-    formatter = forEachSupportedSystem ({pkgs}: pkgs.alejandra);
+    formatter = libx.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
   };
 }
