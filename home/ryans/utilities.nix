@@ -1,8 +1,12 @@
 {
   pkgs,
   lib,
+  config,
+  nixosConfig,
   ...
-}: {
+} @ args: let
+  isNixOS = builtins.hasAttr "nixosConfig" args;
+in {
   programs.bat = {
     enable = true;
     config.theme = "Nord";
@@ -41,13 +45,12 @@
       unzip
       _7zz
       file
+      lstr
       which
-      tree
       gnused
       gnutar
       gawk
       zstd
-      gnupg
       btop
     ]
     ++
@@ -60,4 +63,24 @@
       pciutils
       usbutils
     ]);
+
+  # Nix can start taking a lot of space, as it doesn't remove old versions of
+  # packages automatically. Since we're already using nh (yet another nix CLI
+  # helper), use that to clean up.
+
+  # This checks if there's already a corresponding configuration in nixosConfig
+  # (there's none for nix-darwin), and removes it from home-manager if there is.
+  programs.nh = with lib; let
+    defaultFlakeLocation = "${config.xdg.dataHome}/nix-config";
+  in
+    lib.mkIf (!nixosConfig.programs.nh.enable or (!isNixOS)) {
+      enable = true;
+      darwinFlake = defaultFlakeLocation;
+      homeFlake = mkIf (builtins.hasAttr "darwinConfig" args) "${config.xdg.dataHome}/nix-config";
+      clean = {
+        enable = true;
+        dates = "weekly";
+        extraArgs = "--verbose --keep-since 7d --optimise";
+      };
+    };
 }

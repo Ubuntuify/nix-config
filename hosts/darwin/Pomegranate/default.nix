@@ -23,4 +23,6 @@
       EnableTilingByEdgeDrag = false; # should be taken over by cask 'Rectangle'
     };
   };
+
+  programs.fish.enable = true;
 }

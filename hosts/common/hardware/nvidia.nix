@@ -16,7 +16,7 @@ lib.mkMerge [
         modesetting.enable = true;
         powerManagement.enable = true;
         powerManagement.finegrained = true;
-        open = lib.mkDefault true; # a config should override this if using pre-Turing nvidia, as open source drivers won't work
+        open = lib.mkDefault true; # a config should override this if using pre-Turing nvidia, as open source (kernel) drivers won't work
         nvidiaSettings = true;
       };
     }

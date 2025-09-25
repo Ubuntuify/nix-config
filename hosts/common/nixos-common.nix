@@ -1,16 +1,27 @@
-{...}: {
-  # nix settings
-  nix.optimise.automatic = true;
+{systemUser, ...}: {
+  # nix settings (includ. optimizations, automatic garbage collection)
+  nix = {
+    optimise.automatic = true;
 
-  nix.settings = {
-    auto-optimise-store = true;
-    max-substitution-jobs = 64;
-    http-connections = 64;
+    settings = {
+      auto-optimise-store = true;
+      max-substitution-jobs = 64;
+      http-connections = 64;
+    };
   };
 
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
+  programs.command-not-found.enable = true;
+
+  # Nix can start taking a lot of space, as it doesn't remove old versions of
+  # packages automatically. Since we're already using nh (yet another nix CLI
+  # helper), use that to clean up.
+  programs.nh = {
+    enable = true;
+    flake = "/home/${systemUser}/.local/share/nix-config";
+    clean = {
+      enable = true;
+      dates = "weekly";
+      extraArgs = "--verbose --keep-since 7d --optimise";
+    };
   };
 }

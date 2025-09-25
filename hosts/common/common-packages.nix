@@ -7,6 +7,7 @@
     imagemagick
     dua # modern 'du' equivalent
     duf # modern 'df' equivalent
+    lstr # modern 'tree' equivalent
     git
     wget2
     curl

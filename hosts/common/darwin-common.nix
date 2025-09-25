@@ -9,6 +9,7 @@
     enable = true;
     brews = [
       "lujstn/tap/pinentry-touchid" # use pinentry-touchid; fixed varient
+      "mas"
     ];
     casks = [
       "rectangle"
