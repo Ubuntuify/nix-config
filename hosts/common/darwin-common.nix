@@ -26,7 +26,7 @@
     onActivation.cleanup = "zap";
   };
 
-  environment.systemPackages = [pkgs.firefox];
+  environment.systemPackages = [];
 
   # turn on touch id for sudo
   security.pam.services.sudo_local = {
