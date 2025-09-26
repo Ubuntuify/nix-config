@@ -4,24 +4,34 @@
   config,
   ...
 }:
-lib.mkMerge [
-  {nixpkgs.config.cudaSupport = true;} # all packages should be built with cuda support, if on NVIDIA.
-  (
-    if (!config.wsl.enable)
-    then {
-      hardware.graphics.enable = true;
-      services.xserver.videoDrivers = ["nvidia"];
+with lib; let
+  isWSL = builtins.hasAttr "wsl" config;
+in
+  mkMerge [
+    {nixpkgs.config.cudaSupport = true;} # all packages should be built with cuda support, if on NVIDIA.
+    (mkIf (!isWSL) {
+      # Bare metal settings
+
+      # These are the normal settings you would enter if you were running on bare metal,
+      # or doing virtual machine GPU pass through.
 
       hardware.nvidia = {
         modesetting.enable = true;
         powerManagement.enable = true;
         powerManagement.finegrained = true;
-        open = lib.mkDefault true; # a config should override this if using pre-Turing nvidia, as open source (kernel) drivers won't work
+        open = mkDefault (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware); # a config should override this if using pre-Turing nvidia, as open source (kernel) drivers won't work
         nvidiaSettings = true;
       };
-    }
-    else {
-      # WSL specific settings
+      hardware.graphics.enable = true;
+      services.xserver.videoDrivers = mkDefault ["nvidia"];
+    })
+    (mkIf isWSL {
+      # NixOS-WSL specific settings
+
+      # These settings are specific to when only a D3D12 driver is exposed to the Linux kernel,
+      # and since it is running in a VM, gaming is not often a priority.
+      # CUDA support, and other NVIDIA toolkits are engaged here.
+
       hardware.nvidia-container-toolkit = {
         enable = true;
         mount-nvidia-executables = false;
@@ -55,14 +65,5 @@ lib.mkMerge [
         enable = true;
         libraries = [wsl-lib];
       };
-
-      # A hook to export variables for CUDA support on NixOS-WSL.
-      shellHook = ''
-        export CUDA_PATH=${pkgs.cudatoolkit}
-        export LD_LIBRARY_PATH=/usr/lib/wsl/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.ncurses5}/lib
-        export EXTRA_LDFLAGS="-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib"
-        export EXTRA_CCFLAGS="-I/usr/include"
-      '';
-    }
-  )
-]
+    })
+  ]

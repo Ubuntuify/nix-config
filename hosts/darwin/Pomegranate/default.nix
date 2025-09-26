@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   system.defaults = {
     NSGlobalDomain = {
       AppleICUForce24HourTime = true;
@@ -23,6 +27,8 @@
       EnableTilingByEdgeDrag = false; # should be taken over by cask 'Rectangle'
     };
   };
+
+  nix.package = pkgs.lixPackageSets.stable.lix;
 
   programs.fish.enable = true;
 }

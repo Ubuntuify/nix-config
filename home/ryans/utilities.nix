@@ -56,7 +56,7 @@ in {
     ++
     # Packages that only exist on Linux, and should not be added to
     # home.packages on darwin systems.
-    (lib.optional pkgs.stdenv.isLinux [
+    (lib.optionals (pkgs.stdenv.isLinux) [
       lsof
       ethtool
       lm_sensors

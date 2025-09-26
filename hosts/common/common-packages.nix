@@ -12,5 +12,6 @@
     wget2
     curl
     uv
+    nix-tree
   ];
 }

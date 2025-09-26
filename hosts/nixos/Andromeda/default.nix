@@ -9,11 +9,13 @@
 
   wsl = {
     enable = true;
+
     defaultUser = systemUser;
 
     useWindowsDriver = true;
     startMenuLaunchers = true;
-    docker-desktop = true;
+
+    docker-desktop.enable = true;
   };
 
   home-manager.users.${systemUser} = libx.mkHome {config-name = systemUser;};

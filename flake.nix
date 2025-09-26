@@ -34,19 +34,20 @@
     libx = import ./lib {inherit inputs outputs;};
   in {
     nixosConfigurations = {
-      Afina = libx.mkNixos {hostname = "Afina";};
+      #Afina = libx.mkNixos {hostname = "Afina";};
       Andromeda = libx.mkNixos {
         hostname = "Andromeda";
         supportModules = [inputs.nixos-wsl.nixosModules.default];
       };
-      Cassiopeia = libx.mkNixos {
-        hostname = "Cassiopeia";
-        system = "aarch64-linux";
-        supportModules = [inputs.nixos-wsl.nixosModules.default];
-      };
-      Persephone = libx.mkNixos {hostname = "Persephone";};
-      Melinoe = libx.mkNixOs {
-        hostname = "Melinoe";
+      #Cassiopeia = libx.mkNixos {
+      #  hostname = "Cassiopeia";
+      #  system = "aarch64-linux";
+      #  supportModules = [inputs.nixos-wsl.nixosModules.default];
+      #};
+      #Persephone = libx.mkNixos {hostname = "Persephone";};
+      #Melinoe = libx.mkNixos {hostname = "Melinoe";};
+      Thanatos = libx.mkNixos {
+        hostname = "Thanatos";
         system = "aarch64-linux";
         supportModules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
       };

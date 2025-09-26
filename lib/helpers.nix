@@ -73,14 +73,14 @@ in {
     hostname,
     systemUser ? "ryans", # managing user/main admin account
     system ? "x86_64-linux",
-    supportModules, # for systems that need extra support modules, such as NixOS-WSL and Apple Silicon
+    supportModules ? [], # for systems that need extra support modules, such as NixOS-WSL and Apple Silicon
   }: let
-    hostSpecificConf = "./../hosts/nixos/${hostname}/default.nix"; # Since this config is more barren, do not test for if the config exists, it always should.
+    hostSpecificConf = builtins.toPath ../hosts/nixos/${hostname}/default.nix; # Since this config is more barren, do not test for if the config exists, it always should.
   in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = {inherit system inputs libx systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
-      modules = lib.mkMerge [
+      modules =
         [
           ../hosts/common/common-packages.nix
           inputs.home-manager.nixosModules.default
@@ -91,18 +91,49 @@ in {
             system.stateVersion = "25.05"; # set stateVersion here, and not in the individual configs themselves
           } # NixOS configurations are often more varied, so do not define more
         ]
-        supportModules
-      ];
+        ++ supportModules;
     };
 
   mkHome = {
     config-name ? "ryans",
-    options,
+    options ? {user = "ryans";},
   }: let
   in
     lib.mkMerge [
       ../home/${config-name}/default.nix
       inputs.nvf.homeManagerModules.default
       {home-manager-options = options;} # pass in the options for home-manager as config.home-manager-options
+      ({pkgs, ...} @ args: let
+        name = options.user or config-name;
+      in {
+        options.home-manager-options = {
+          user = lib.mkOption {
+            # user automatically generates the username and home directory according
+            # to the defaults of the OS, such as /home/${user} for Linux and /Users/${user}
+            # on Darwin/MacOS
+            type = lib.types.str;
+            description = "User of this home-manager configuration";
+          };
+        };
+
+        config = {
+          home.username = name;
+          # This needs to be set with mkDefault, as the nix-darwin module of home-manager
+          # will throw an error otherwise if this is set.
+          home.homeDirectory = lib.mkDefault (
+            if pkgs.stdenv.hostPlatform.isDarwin
+            then "/Users/${name}"
+            else "/home/${name}"
+          );
+
+          # This option does not exist on darwin systems, therefore should not be set if the
+          # host system is not Linux.
+
+          # NixOS setups should setup using the included home-manager NixOS module, so
+          # detecting the config attribute passed over should work well enough.
+          targets.genericLinux.enable = lib.mkIf (pkgs.stdenv.hostPlatform.isLinux) (!builtins.hasAttr "nixosConfig" args);
+          programs.home-manager.enable = true;
+        };
+      })
     ];
 }
