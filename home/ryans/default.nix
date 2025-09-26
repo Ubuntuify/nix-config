@@ -1,9 +1,4 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-} @ args: {
+{lib, ...} @ args: {
   imports = [
     ./fish.nix
     ./git.nix
@@ -22,6 +17,7 @@
       # the only ones that should be built) or has a graphical user interface, such as
       # a user-facing system.
       graphical = lib.mkEnableOption "graphical home-manager modules";
+      isLowRam = lib.mkEnableOption "to enable Low RAM optimizations (4-8GiB)";
     };
   };
 

@@ -4,10 +4,16 @@
     settings.general.EnableNetworkConfiguration = true;
   };
 
-  boot.extraModprobeConfig = ''
-    options hid_apple iso_layout=0
-  '';
+  boot = {
+    supportedFilesystems = ["ntfs" "btrfs"];
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 5;
+      };
+      efi.canTouchEfiVariables = false;
+    };
+  };
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = false;
+  users.mutableUsers = false;
 }

@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  self,
+  ...
+}: {
   programs.nvf = {
     enable = true;
     settings = {
@@ -71,10 +75,18 @@
         bash.enable = true;
 
         nix.lsp.server = "nixd";
-        nix.lsp.options = {
-          nixos.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.Andromeda.options";
-          home_manager.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.Andromeda.options.home-manager.users.type.getSubOptions []";
-          nix-darwin.expr = "(builtins.getFlake (builtins.toString ./.)).darwinConfigurations.Macbook.options";
+        nix.lsp.options = let
+          getExpression = search: ''
+            let
+              flake = (builtins.getFlake (builtins.toString ./.));
+              inherit (flake.inputs.nixpkgs) lib;
+            in
+              lib.concatMap (x: x.options) (lib.attrsets.attrValues flake.${search})
+          '';
+        in {
+          nixos.expr = getExpression "nixosConfigurations";
+          home_manager.expr = getExpression "homeConfigurations";
+          nix-darwin.expr = getExpression "darwinConfigurations";
         };
       };
     };

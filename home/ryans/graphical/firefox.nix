@@ -27,9 +27,6 @@ in
           ExtensionUpdate = false; # extensions should only be updated through nix, as defined below
           UseSystemPrintDialog = true;
           HttpsOnlyMode = "force_enabled";
-          ExtensionSettings = {
-            "uBlock0@raymondhill.net".installation_mode = "forced_installed";
-          };
         };
 
         profiles.ryan = {
@@ -41,50 +38,67 @@ in
           };
           extensions = {
             force = true; # make sure that all extensions are declarative
-            packages = with firefox-addons; [
-              ublock-origin-upstream
-              terms-of-service-didnt-read
-              decentraleyes
-              chrome-mask
-              sponsorblock
-              don-t-fuck-with-paste
-              clearurls
-              return-youtube-dislikes
-              multi-account-containers
-              darkreader
-              fastforwardteam
-              github-file-icons
-              hyperchat
-              lovely-forks
-            ];
+            packages = with firefox-addons;
+              [
+                ublock-origin-upstream
+                skip-redirect
+                sponsorblock
+                don-t-fuck-with-paste
+                return-youtube-dislikes
+                multi-account-containers
+                darkreader
+                github-file-icons
+                lovely-forks
+              ]
+              ++ lib.optionals cfg.system.isLowRam [auto-tab-discard];
             settings = {
               "uBlock0@raymondhill.net" = {
                 force = true;
-                settings = {
+                settings = let
+                  enabledImportedLists = [
+                    "https://www.i-dont-care-about-cookies.eu/abp/"
+                    "https://raw.githubusercontent.com/DandelionSprout/adfilt/master/LegitimateURLShortener.txt"
+                  ];
+                in {
                   uiAccentCustom = true;
-                  externalLists = "https://www.i-dont-care-about-cookies.eu/abp/";
-                  importedLists = [
-                    "https://www.i-dont-care-about-cookies.eu/abp/"
-                  ];
-                  selectedFilterLists = [
-                    "user-filters"
-                    "ublock-filters"
-                    "ublock-badware"
-                    "ublock-privacy"
-                    "ublock-quick-fixes"
-                    "ublock-unbreak"
-                    "easylist"
-                    "easyprivacy"
-                    "urlhaus-1"
-                    "plowe-0"
-                    "fanboy-cookiemonster"
-                    "ublock-cookies-easylist"
-                    "adguard-cookies"
-                    "ublock-cookies-adguard"
-                    "https://www.i-dont-care-about-cookies.eu/abp/"
-                  ];
+                  externalLists = lib.concatLines enabledImportedLists;
+                  importedLists = enabledImportedLists;
+                  selectedFilterLists =
+                    [
+                      "user-filters"
+                      "ublock-filters"
+                      "ublock-badware"
+                      "ublock-privacy"
+                      "ublock-quick-fixes"
+                      "ublock-unbreak"
+                      "easylist"
+                      "easyprivacy"
+                      "urlhaus-1"
+                      "plowe-0"
+                      "fanboy-cookiemonster"
+                      "ublock-cookies-easylist"
+                      "adguard-cookies"
+                      "ublock-cookies-adguard"
+                    ]
+                    ++ enabledImportedLists;
                 };
               };
+              "github-forks-addon@musicallyut.in" = {
+                force = true;
+                permissions = ["*://github.com/*" "*://api.github.com/*" "storage"];
+              };
+            };
+          };
+          containers = {
+            Personal = {
+              id = 1;
+              icon = "fingerprint";
+              color = "blue";
+            };
+            "Work/School" = {
+              id = 2;
+              icon = "briefcase";
+              color = "red";
             };
           };
           settings = {
@@ -137,13 +151,19 @@ in
 
             # Other selective features
             "privacy.resistFingerprinting" = true;
+            "privacy.fingerprintingProtecting" = true;
             "image.jxl.enabled" = true; # enable JPEG-XL support
             "browser.tabs.insertRelatedAfterCurrent" = false;
             "general.smoothScroll.msdPhysics.enabled" = true;
-            "browser.tabs.min_inactive_duration_before_unload" = 90000; # unload tabs after 1:30 minutes.
+            "browser.tabs.min_inactive_duration_before_unload" =
+              if cfg.system.isLowRam # check if the system is a Low RAM machine
+              then 60000 # unload tabs after 1 minute.
+              else 90000; # unload tabs after 1:30 minutes.
             "gfx.font_rendering.cleartype_params.rendering_mode" = 5;
             "gfx.font_rendering.cleartype_params.force_gdi_classic_max_size" = 0;
             "dom.animations.offscreen-throttling" = false;
+            "browser.tabs.loadDivertedInBackground" = true;
+            "browser.tabs.loadInBackground" = false;
           };
         };
       };
