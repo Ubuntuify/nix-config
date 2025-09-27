@@ -20,4 +20,6 @@
     nix-tree
     uv
   ];
+
+  system.stateVersion = "24.05";
 }

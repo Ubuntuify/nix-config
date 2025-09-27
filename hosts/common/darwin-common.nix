@@ -4,6 +4,8 @@
   config,
   ...
 }: {
+  system.stateVersion = 6; # set stateVersion here, for aforementioned reasons
+
   # install homebrew and macos apps
   homebrew = {
     enable = true;

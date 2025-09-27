@@ -24,4 +24,6 @@
       extraArgs = "--verbose --keep-since 7d --optimise";
     };
   };
+
+  system.stateVersion = "25.05"; # set stateVersion here, and not in the individual system configs themselves
 }

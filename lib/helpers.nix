@@ -39,7 +39,6 @@ in {
         {
           system.primaryUser = username; # explicit workaround: this will be removed in later nix-darwin versions
           networking.hostName = hostname;
-          system.stateVersion = 6;
           nix.settings.experimental-features = ["nix-command flakes"];
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -91,7 +90,6 @@ in {
             home-manager.useUserPackages = true;
             networking.hostName = hostname;
             nix.settings.experimental-features = ["nix-command" "flakes"];
-            system.stateVersion = "25.05"; # set stateVersion here, and not in the individual configs themselves
           } # NixOS configurations are often more varied, so do not define more
         ]
         ++ supportModules;
