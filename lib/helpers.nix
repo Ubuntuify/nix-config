@@ -1,10 +1,11 @@
 {
+  self,
   inputs,
   outputs,
   ...
 }: let
   inherit (inputs.nixpkgs) lib;
-  libx = import ./default.nix {inherit inputs outputs;};
+  libx = import ./default.nix {inherit self inputs outputs;};
   supportedSystems = ["aarch64-darwin" "x86_64-linux" "aarch64-linux"];
 in {
   forEachSupportedSystem = f:
@@ -43,7 +44,7 @@ in {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "backup";
-          home-manager.extraSpecialArgs = {inherit inputs outputs;};
+          home-manager.extraSpecialArgs = {inherit self inputs outputs;};
           users.users.${username} = {
             # for some reason, home-manager makes an assumption that a user entry always exists here, so we have to define it if we want home-manager to work without erroring out.
             name = username;
@@ -79,13 +80,15 @@ in {
   in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = {inherit system inputs libx systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
+      specialArgs = {inherit system self inputs libx systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
       modules =
         [
           ../hosts/common/common-packages.nix
           inputs.home-manager.nixosModules.default
           hostSpecificConf
           {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
             networking.hostName = hostname;
             nix.settings.experimental-features = ["nix-command" "flakes"];
             system.stateVersion = "25.05"; # set stateVersion here, and not in the individual configs themselves
@@ -97,8 +100,7 @@ in {
   mkHome = {
     config-name ? "ryans",
     options ? {user = "ryans";},
-  }: let
-  in
+  }:
     lib.mkMerge [
       ../home/${config-name}/default.nix
       inputs.nvf.homeManagerModules.default
@@ -136,4 +138,31 @@ in {
         };
       })
     ];
+
+  mkDroid = {
+    profile ? "full",
+    system ? "aarch64-linux",
+    username ? "ryans",
+  }: let
+    profileConf = ../hosts/android/${profile}.nix;
+    inherit (inputs) nixpkgs;
+  in
+    inputs.nix-on-droid.lib.nixOnDroidConfiguration {
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [inputs.nix-on-droid.overlays.default];
+      };
+      extraSpecialArgs = {inherit self libx inputs outputs;};
+      modules = [
+        ../hosts/common/android-common.nix
+        profileConf
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
+          home-manager.extraSpecialArgs = {inherit self inputs outputs;};
+          user.userName = username;
+        }
+      ];
+    };
 }

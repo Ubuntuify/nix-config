@@ -7,14 +7,20 @@
   };
 
   inputs = {
+    # Main system components (i.e. NixOS, nix-darwin, etc.)
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
-    apple-silicon.url = "github:nix-community/nixos-apple-silicon/main";
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs"; # These stop nix from downloading multiple instances of nixpkgs
     };
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager"; # nix-on-droid implements its own home-manager plugin, and
+      # may not have the updates that home-manager currently has, lock it to prevent issues with current.
+    };
+
+    # User components (such as for: setting up home directories, and homebrew)
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +29,16 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    # Support modules (modules that connect to main system components to add patches for NixOS to work)
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    apple-silicon = {
+      url = "github:nix-community/nixos-apple-silicon/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Alternate repositories
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,7 +47,7 @@
 
   outputs = inputs @ {self, ...}: let
     inherit (self) outputs;
-    libx = import ./lib {inherit inputs outputs;};
+    libx = import ./lib {inherit self inputs outputs;};
   in {
     nixosConfigurations = {
       #Afina = libx.mkNixos {hostname = "Afina";};
@@ -55,6 +71,10 @@
 
     darwinConfigurations = {
       Pomegranate = libx.mkDarwin {hostname = "Pomegranate";};
+    };
+
+    nixOnDroidConfigurations = {
+      default = libx.mkDroid {profile = "go";};
     };
 
     formatter = libx.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
