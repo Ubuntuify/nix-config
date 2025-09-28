@@ -15,7 +15,6 @@
     aria2
     dua
     duf
-    gitMinimal
     wget2
     nix-tree
     uv

@@ -160,6 +160,9 @@ in {
           home-manager.backupFileExtension = "backup";
           home-manager.extraSpecialArgs = {inherit self inputs outputs;};
           user.userName = username;
+          nix.extraOptions = ''
+            experimental-features = nix-command flakes
+          '';
         }
       ];
     };
