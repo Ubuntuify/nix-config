@@ -120,6 +120,9 @@ in {
           home.username = name;
           # This needs to be set with mkDefault, as the nix-darwin module of home-manager
           # will throw an error otherwise if this is set.
+          #
+          # It should also be defined as default as anachronistic systems which may not follow
+          # the FHS/MacOS standard for home directories may override this setting.
           home.homeDirectory = lib.mkDefault (
             if pkgs.stdenv.hostPlatform.isDarwin
             then "/Users/${name}"
@@ -128,7 +131,7 @@ in {
 
           # This option does not exist on darwin systems, therefore should not be set if the
           # host system is not Linux.
-
+          #
           # NixOS setups should setup using the included home-manager NixOS module, so
           # detecting the config attribute passed over should work well enough.
           targets.genericLinux.enable = lib.mkIf (pkgs.stdenv.hostPlatform.isLinux) (!builtins.hasAttr "nixosConfig" args);
@@ -141,6 +144,9 @@ in {
     profile ? "full",
     system ? "aarch64-linux",
     username ? "ryans",
+    experimental ? {
+      enable-lix = lib.mkEnableOption "use the Lix package instead of CppNix";
+    },
   }: let
     profileConf = ../hosts/android/${profile}.nix;
     inherit (inputs) nixpkgs;
@@ -148,7 +154,13 @@ in {
     inputs.nix-on-droid.lib.nixOnDroidConfiguration {
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [inputs.nix-on-droid.overlays.default];
+        overlays = [
+          inputs.nix-on-droid.overlays.default
+          (lib.composeManyExtensions
+            [
+              (import ../overlays/lix-as-nix.nix {inherit inputs;})
+            ])
+        ];
       };
       extraSpecialArgs = {inherit self libx inputs outputs;};
       modules = [

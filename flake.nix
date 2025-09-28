@@ -74,7 +74,10 @@
     };
 
     nixOnDroidConfigurations = {
-      default = libx.mkDroid {profile = "go";};
+      default = libx.mkDroid {
+        profile = "go";
+        experimental.enable-lix = true;
+      };
     };
 
     formatter = libx.forEachSupportedSystem ({pkgs}: pkgs.alejandra);

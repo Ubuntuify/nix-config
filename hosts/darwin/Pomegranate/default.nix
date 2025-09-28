@@ -1,9 +1,12 @@
 {
+  inputs,
   pkgs,
   config,
   ...
 }: {
-  imports = [../../common/activate-lix.nix];
+  nixpkgs.overlays = [
+    (import ../../../overlays/lix-as-nix.nix {inherit inputs;})
+  ];
 
   system.defaults = {
     NSGlobalDomain = {
