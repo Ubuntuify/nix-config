@@ -55,6 +55,7 @@ in {
               system.graphical = lib.mkDefault true;
             };
           };
+          system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";
         }
         inputs.nix-homebrew.darwinModules.nix-homebrew
         ({config, ...}: {
@@ -90,6 +91,7 @@ in {
             home-manager.useUserPackages = true;
             networking.hostName = hostname;
             nix.settings.experimental-features = ["nix-command" "flakes"];
+            system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";
           } # NixOS configurations are often more varied, so do not define more
         ]
         ++ supportModules;
