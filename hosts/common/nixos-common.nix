@@ -25,5 +25,5 @@
     };
   };
 
-  system.stateVersion = "25.05"; # set stateVersion here, and not in the individual system configs themselves
+  system.stateVersion = "25.11"; # set stateVersion here, and not in the individual system configs themselves
 }

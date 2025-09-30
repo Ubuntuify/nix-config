@@ -84,6 +84,7 @@ in {
       modules =
         [
           ../hosts/common/common-packages.nix
+          ../hosts/common/nixos-common.nix
           inputs.home-manager.nixosModules.default
           hostSpecificConf
           {
