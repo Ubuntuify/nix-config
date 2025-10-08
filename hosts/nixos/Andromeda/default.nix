@@ -9,12 +9,9 @@
 
   wsl = {
     enable = true;
-
-    defaultUser = systemUser;
-
+    defaultUser = systemUser; # we no longer have to setup the user here, NixOS-WSL already does the rest
     useWindowsDriver = true;
     startMenuLaunchers = true;
-
     docker-desktop.enable = true;
   };
 

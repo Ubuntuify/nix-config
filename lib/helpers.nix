@@ -161,7 +161,7 @@ in {
           inputs.nix-on-droid.overlays.default
           (lib.composeManyExtensions
             [
-              (import ../overlays/lix-as-nix.nix {inherit inputs;})
+              (lib.mkIf experimental.enable-lix (import ../overlays/lix.nix {inherit inputs;}))
             ])
         ];
       };

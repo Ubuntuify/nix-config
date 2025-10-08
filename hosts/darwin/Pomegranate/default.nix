@@ -1,11 +1,10 @@
 {
   inputs,
-  pkgs,
   config,
   ...
 }: {
   nixpkgs.overlays = [
-    (import ../../../overlays/lix-as-nix.nix {inherit inputs;})
+    (import ../../../overlays/lix.nix {inherit inputs;})
   ];
 
   system.defaults = {
