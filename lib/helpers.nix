@@ -36,6 +36,7 @@ in {
         ../hosts/common/darwin-common.nix
         hostSpecificConf
         inputs.home-manager.darwinModules.home-manager
+        inputs.mac-app-util.darwinModules.default
         {
           system.primaryUser = username; # explicit workaround: this will be removed in later nix-darwin versions
           networking.hostName = hostname;
@@ -55,6 +56,10 @@ in {
               system.graphical = lib.mkDefault true;
             };
           };
+          home-manager.sharedModules = [
+            inputs.mac-app-util.homeManagerModules.default
+            {targets.darwin.linkApps.enable = false;} # disables the symlinks made in ~/Applications/Home Manager Apps which don't work for Spotlight anyways
+          ]; # makes it so that home-manager apps don't have to use the workaround anymore
           system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";
         }
         inputs.nix-homebrew.darwinModules.nix-homebrew

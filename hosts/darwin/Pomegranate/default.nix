@@ -1,11 +1,19 @@
 {
   inputs,
+  pkgs,
   config,
   ...
 }: {
   nixpkgs.overlays = [
     (import ../../../overlays/lix.nix {inherit inputs;})
   ];
+
+  homebrew = {
+    casks = [
+      "wacom-tablet"
+      "krita"
+    ];
+  };
 
   system.defaults = {
     NSGlobalDomain = {
@@ -15,9 +23,9 @@
     };
     dock = {
       persistent-apps = [
-        {app = "/Applications/Nix Apps/Firefox.app";}
+        {app = "${pkgs.firefox}/Applications/Firefox.app";}
         {app = "/System/Applications/Mail.app";}
-        {app = "/Applications/Nix Apps/Alacritty.app";}
+        {app = "${pkgs.alacritty}/Applications/Alacritty.app";}
         {app = "/Applications/Discord.app";}
         {app = "/System/Applications/App Store.app";}
       ];
