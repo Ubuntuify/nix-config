@@ -4,18 +4,15 @@
   config,
   ...
 }: let
-  inherit (outputs) overlays;
+  inherit (outputs) overlays modules;
 in {
+  imports = [
+    modules.drawing
+  ];
+
   nixpkgs.overlays = [
     overlays.lix
   ];
-
-  homebrew = {
-    casks = [
-      "wacom-tablet"
-      "krita"
-    ];
-  };
 
   system.defaults = {
     NSGlobalDomain = {
