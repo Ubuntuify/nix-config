@@ -1,8 +1,0 @@
-
-include ~/.config/sway/autorun.conf
-include ~/.config/sway/hid.conf
-include ~/.config/sway/keybindings.conf
-include ~/.config/sway/autorun.conf
-include ~/.config/sway/swayfx.conf
-include ~/.config/sway/customization.conf
-
