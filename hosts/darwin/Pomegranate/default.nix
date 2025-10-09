@@ -1,11 +1,13 @@
 {
-  inputs,
+  outputs,
   pkgs,
   config,
   ...
-}: {
+}: let
+  inherit (outputs) overlays;
+in {
   nixpkgs.overlays = [
-    (import ../../../overlays/lix.nix {inherit inputs;})
+    overlays.lix
   ];
 
   homebrew = {

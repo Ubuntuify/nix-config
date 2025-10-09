@@ -19,6 +19,7 @@
     with pkgs; [
       # These packages are taken from nixpkgs.
       nh
+      git
       aria2
       dua
       duf

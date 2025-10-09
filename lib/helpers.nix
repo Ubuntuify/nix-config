@@ -30,7 +30,7 @@ in {
   in
     inputs.nix-darwin.lib.darwinSystem {
       inherit system;
-      specialArgs = {inherit system inputs username;};
+      specialArgs = {inherit system inputs outputs username;};
       modules = [
         ../hosts/common/common-packages.nix
         ../hosts/common/darwin-common.nix
@@ -85,7 +85,7 @@ in {
   in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = {inherit system self inputs libx systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
+      specialArgs = {inherit system self inputs outputs libx systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
       modules =
         [
           ../hosts/common/common-packages.nix

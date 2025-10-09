@@ -32,7 +32,10 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     # Support modules (modules that connect to main system components to add patches for NixOS to work)
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     mac-app-util = {
       url = "github:hraban/mac-app-util";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,10 +44,20 @@
       url = "github:nix-community/nixos-apple-silicon/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Alternate repositories
     nur = {
       url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Flake components
+    haumae = {
+      url = "github:nix-community/haumea/v0.2.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -53,6 +66,26 @@
     inherit (self) outputs;
     libx = import ./lib {inherit self inputs outputs;};
   in {
+    # <prerequisite/required>
+    # These are parts that are taken out for modules to work, they are necessary for some parts
+    # of the flake to function properly and removing them should be taken care of carefully, by
+    # checking if any part requires anything defined here.
+
+    overlays = inputs.haumae.lib.load {
+      src = ./overlays;
+      inputs = {inherit inputs;};
+    };
+
+    modules = inputs.haumae.lib.load {
+      src = ./modules;
+      loader = inputs.haumae.lib.loaders.verbatim;
+    };
+
+    # <system/configurations>
+    # This flake is, of course, a configuration flake for NixOS, nix-darwin, and nix-on-droid.
+    # This is where systems are defined, and, if required, their support modules, showing what
+    # kind of system they are.
+
     nixosConfigurations = {
       #Afina = libx.mkNixos {hostname = "Afina";};
       Andromeda = libx.mkNixos {
@@ -66,11 +99,11 @@
       #};
       #Persephone = libx.mkNixos {hostname = "Persephone";};
       #Melinoe = libx.mkNixos {hostname = "Melinoe";};
-      Thanatos = libx.mkNixos {
-        hostname = "Thanatos";
-        system = "aarch64-linux";
-        supportModules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
-      };
+      #Thanatos = libx.mkNixos {
+      #  hostname = "Thanatos";
+      #  system = "aarch64-linux";
+      #  supportModules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
+      #};
     };
 
     darwinConfigurations = {
@@ -83,6 +116,10 @@
         experimental.enable-lix = true;
       };
     };
+
+    # <extra/misc>
+    # These are development requirements or miscellaneous configurations that are not required
+    # for the flake. Anything defined below can be removed with little to no issue.
 
     formatter = libx.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
   };
