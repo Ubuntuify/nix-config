@@ -22,6 +22,7 @@ in
         open = mkDefault (config.hardware.nvidia.package ? open && config.hardware.nvidia.package ? firmware); # a config should override this if using pre-Turing nvidia, as open source (kernel) drivers won't work
         nvidiaSettings = true;
       };
+
       hardware.graphics.enable = true;
       services.xserver.videoDrivers = mkDefault ["nvidia"];
     })
@@ -38,6 +39,9 @@ in
         mount-nvidia-docker-1-directories = true;
         suppressNvidiaDriverAssertion = true;
       };
+
+      # Creates a LD_LIBRARY_PATH to required libraries, i.e. for running foreign libraries that
+      # require CUDA.
 
       programs.nix-ld = let
         wsl-lib = pkgs.runCommand "wsl-lib" {} ''

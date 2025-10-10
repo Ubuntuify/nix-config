@@ -98,10 +98,6 @@ in
             criteria = {window_role = "dialog";};
           }
           {
-            command = "floating enable";
-            criteria = {window_type = "bubble";};
-          }
-          {
             command = "floating enable, resize set width 1030 height 710";
             criteria = {title = "(?:Open|Save) (?:File|Folder|As)";};
           }

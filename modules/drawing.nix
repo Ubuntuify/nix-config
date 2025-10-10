@@ -11,7 +11,7 @@ in
       (mkIf isLinux (
         if (builtins.hasAttr "hardware" options) # Hides from Nix that this block exists, as otherwise it will fail when building nix-darwin systems;
         then {
-          environment.systemPackages = with pkgs; [krita];
+          home-manager.sharedModules = [{home.packages = with pkgs; [krita];}];
 
           hardware.opentabletdriver.enable = true;
         }

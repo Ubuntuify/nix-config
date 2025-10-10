@@ -1,10 +1,13 @@
 {
   systemUser,
+  outputs,
   libx,
   ...
-}: {
+}: let
+  inherit (outputs) modules;
+in {
   imports = [
-    ../../common/hardware/nvidia.nix
+    modules.hardware.nvidia
   ];
 
   wsl = {
