@@ -15,6 +15,9 @@ in
       grim
       sway-contrib.inactive-windows-transparency
       sway-contrib.grimshot
+
+      # fonts used
+      nerd-fonts.fantasque-sans-mono
     ];
 
     wayland.windowManager.sway = {
@@ -29,6 +32,8 @@ in
         base = true;
         gtk = true;
       };
+
+      xwayland = false; # using xwayland-satellite for XWayland support (deals better with scaling compared to Sway)
 
       config = {
         modifier = "Mod4"; # Mod4 is the 'Super' key, often known as the Windows key on Windows or the Command key on MacOS
@@ -48,7 +53,7 @@ in
 
           eDP-1 = {
             # internal display settings (TODO: map differently depending on device/get specific name for Macbook display)
-            scale = 1.5;
+            scale = "1.5";
             allow_tearing = "yes";
           };
         };
@@ -67,8 +72,6 @@ in
           inner = 5;
           outer = 5;
         };
-
-        xwayland = false; # using xwayland-satellite for XWayland support (deals better with scaling compared to Sway)
 
         startup = [
           {command = "${pkgs.autotiling-rs}/bin/autotiling-rs";}
@@ -105,9 +108,9 @@ in
         ];
 
         keybindings = let
-          modifier = config.wayland.windowManager.sway.modifier;
-          launcher = config.wayland.windowManager.sway.menu;
-          terminal = config.wayland.windowManager.sway.terminal;
+          modifier = config.wayland.windowManager.sway.config.modifier;
+          launcher = config.wayland.windowManager.sway.config.menu;
+          terminal = config.wayland.windowManager.sway.config.terminal;
         in {
           # special keyboard bindings (media keys, etc.)
           "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
@@ -174,55 +177,53 @@ in
           "${modifier}+Shift+Minus" = "move scratchpad";
           "${modifier}+Minus" = "scratchpad show";
         };
-
-        extraConfig = ''
-          # This part should only show if the window manager is the SwayFX fork.
-          ${lib.mkIf (config.wayland.windowManager.sway.package == pkgs.swayfx) ''
-            blur enable
-            corner_radius 5
-          ''}
-
-          # Colors
-          set $crust #11111b
-          set $rosewater #f5e0dc
-          set $flamingo #f2cdcd
-          set $pink #f5c2e7
-          set $mauve #cba6f7
-          set $red #f38ba8
-          set $maroon #eba0ac
-          set $peach #fab387
-          set $yellow #f9e2af
-          set $green #a6e3a1
-          set $teal #94e2d5
-          set $sky #89dceb
-          set $sapphire #74c7ec
-          set $blue #89b4fa
-          set $lavender #b4befe
-          set $text #cdd6f4
-          set $subtext1 #bac2de
-          set $subtext0 #a6adc8
-          set $overlay2 #9399b2
-          set $overlay1 #7f849c
-          set $overlay0 #6c7086
-          set $surface2 #585b70
-          set $surface1 #45475a
-          set $surface0 #313244
-          set $base #1e1e2e
-          set $mantle #181825
-
-          client.focused           $lavender $base $text  $rosewater $lavender
-          client.focused_inactive  $overlay0 $base $text  $rosewater $overlay0
-          client.unfocused         $overlay0 $base $text  $rosewater $overlay0
-          client.urgent            $peach    $base $peach $overlay0  $peach
-          client.placeholder       $overlay0 $base $text  $overlay0  $overlay0
-
-          # Gesture binding (trackpad)
-          bindgesture swipe:3:up move up
-          bindgesture swipe:3:down move down
-          bindgesture swipe:3:left move left
-          bindgesture swipe:3:right move right
-        '';
       };
+      extraConfig = ''
+        # This part should only show if the window manager is the SwayFX fork.
+        # lib.mkIf (config.wayland.windowManager.sway.package == pkgs.swayfx)
+          blur enable
+          corner_radius 5
+
+        # Colors
+        set $crust #11111b
+        set $rosewater #f5e0dc
+        set $flamingo #f2cdcd
+        set $pink #f5c2e7
+        set $mauve #cba6f7
+        set $red #f38ba8
+        set $maroon #eba0ac
+        set $peach #fab387
+        set $yellow #f9e2af
+        set $green #a6e3a1
+        set $teal #94e2d5
+        set $sky #89dceb
+        set $sapphire #74c7ec
+        set $blue #89b4fa
+        set $lavender #b4befe
+        set $text #cdd6f4
+        set $subtext1 #bac2de
+        set $subtext0 #a6adc8
+        set $overlay2 #9399b2
+        set $overlay1 #7f849c
+        set $overlay0 #6c7086
+        set $surface2 #585b70
+        set $surface1 #45475a
+        set $surface0 #313244
+        set $base #1e1e2e
+        set $mantle #181825
+
+        client.focused           $lavender $base $text  $rosewater $lavender
+        client.focused_inactive  $overlay0 $base $text  $rosewater $overlay0
+        client.unfocused         $overlay0 $base $text  $rosewater $overlay0
+        client.urgent            $peach    $base $peach $overlay0  $peach
+        client.placeholder       $overlay0 $base $text  $overlay0  $overlay0
+
+        # Gesture binding (trackpad)
+        bindgesture swipe:3:up move up
+        bindgesture swipe:3:down move down
+        bindgesture swipe:3:left move left
+        bindgesture swipe:3:right move right
+      '';
     };
 
     home.pointerCursor = let

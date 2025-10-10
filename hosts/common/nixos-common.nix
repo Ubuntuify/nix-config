@@ -1,4 +1,8 @@
-{systemUser, ...}: {
+{
+  pkgs,
+  systemUser,
+  ...
+}: {
   # nix settings (includ. optimizations, automatic garbage collection)
   nix = {
     optimise.automatic = true;
@@ -24,6 +28,8 @@
       extraArgs = "--verbose --keep-since 7d --optimise";
     };
   };
+
+  environment.corePackages = with pkgs; [bash fish];
 
   system.stateVersion = "25.11"; # set stateVersion here, and not in the individual system configs themselves
 }

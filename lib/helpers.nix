@@ -95,6 +95,7 @@ in {
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = {inherit self inputs outputs;};
             networking.hostName = hostname;
             nix.settings.experimental-features = ["nix-command" "flakes"];
             system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";

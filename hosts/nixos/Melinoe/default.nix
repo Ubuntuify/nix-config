@@ -26,12 +26,21 @@
     enable = true;
     settings.general.EnableNetworkConfiguration = true;
   };
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    wifi.backend = "iwd";
+  };
 
   services.pipewire = {
     enable = true;
     pulse.enable = true;
   };
+
+  services.xserver = {
+    enable = true;
+  };
+
+  security.polkit.enable = true;
 
   services.displayManager.ly = {
     enable = true;
