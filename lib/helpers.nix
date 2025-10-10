@@ -5,7 +5,6 @@
   ...
 }: let
   inherit (inputs.nixpkgs) lib;
-  libx = import ./default.nix {inherit self inputs outputs;};
   supportedSystems = ["aarch64-darwin" "x86_64-linux" "aarch64-linux"];
 in {
   forEachSupportedSystem = f:
@@ -50,7 +49,7 @@ in {
             name = username;
             home = "/Users/${username}";
           };
-          home-manager.users.${username} = libx.mkHome {
+          home-manager.users.${username} = outputs.lib.mkHome {
             options = {
               user = username;
               system.graphical = lib.mkDefault true;
@@ -85,7 +84,7 @@ in {
   in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = {inherit system self inputs outputs libx systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
+      specialArgs = {inherit system self inputs outputs systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
       modules =
         [
           ../hosts/common/common-packages.nix
@@ -167,11 +166,11 @@ in {
           inputs.nix-on-droid.overlays.default
           (lib.composeManyExtensions
             [
-              (lib.mkIf experimental.enable-lix (import ../overlays/lix.nix {inherit inputs;}))
+              (lib.mkIf experimental.enable-lix outputs.overlays.lix)
             ])
         ];
       };
-      extraSpecialArgs = {inherit self libx inputs outputs;};
+      extraSpecialArgs = {inherit self inputs outputs;};
       modules = [
         ../hosts/common/android-common.nix
         profileConf

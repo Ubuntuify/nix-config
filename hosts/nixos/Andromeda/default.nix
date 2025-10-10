@@ -1,7 +1,6 @@
 {
   systemUser,
   outputs,
-  libx,
   ...
 }: let
   inherit (outputs) modules;
@@ -18,7 +17,7 @@ in {
     docker-desktop.enable = true;
   };
 
-  home-manager.users.${systemUser} = libx.mkHome {config-name = systemUser;};
+  home-manager.users.${systemUser} = outputs.lib.mkHome {config-name = systemUser;};
 
   # workaround https://github.com/nix-community/NixOS-WSL/issues/454
   environment.sessionVariables.LD_LIBRARY_PATH = ["/run/opengl-driver/lib/"];

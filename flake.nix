@@ -64,7 +64,6 @@
 
   outputs = inputs @ {self, ...}: let
     inherit (self) outputs;
-    libx = import ./lib {inherit self inputs outputs;};
   in {
     # <prerequisite/required>
     # These are parts that are taken out for modules to work, they are necessary for some parts
@@ -81,6 +80,8 @@
       loader = inputs.haumae.lib.loaders.verbatim;
     };
 
+    lib = import ./lib {inherit self inputs outputs;};
+
     # <system/configurations>
     # This flake is, of course, a configuration flake for NixOS, nix-darwin, and nix-on-droid.
     # This is where systems are defined, and, if required, their support modules, showing what
@@ -88,17 +89,17 @@
 
     nixosConfigurations = {
       #Afina = libx.mkNixos {hostname = "Afina";};
-      Andromeda = libx.mkNixos {
+      Andromeda = outputs.lib.mkNixos {
         hostname = "Andromeda";
         supportModules = [inputs.nixos-wsl.nixosModules.default];
       };
-      #Cassiopeia = libx.mkNixos {
+      #Cassiopeia = outputs.lib.mkNixos {
       #  hostname = "Cassiopeia";
       #  system = "aarch64-linux";
       #  supportModules = [inputs.nixos-wsl.nixosModules.default];
       #};
-      #Persephone = libx.mkNixos {hostname = "Persephone";};
-      Melinoe = libx.mkNixos {
+      #Persephone = outputs.lib.mkNixos {hostname = "Persephone";};
+      Melinoe = outputs.lib.mkNixos {
         hostname = "Melinoe";
         system = "aarch64-linux";
         supportModules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
@@ -106,11 +107,11 @@
     };
 
     darwinConfigurations = {
-      Pomegranate = libx.mkDarwin {hostname = "Pomegranate";};
+      Pomegranate = outputs.lib.mkDarwin {hostname = "Pomegranate";};
     };
 
     nixOnDroidConfigurations = {
-      default = libx.mkDroid {
+      default = outputs.lib.mkDroid {
         profile = "go";
         experimental.enable-lix = true;
       };
@@ -120,6 +121,6 @@
     # These are development requirements or miscellaneous configurations that are not required
     # for the flake. Anything defined below can be removed with little to no issue.
 
-    formatter = libx.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
+    formatter = outputs.lib.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
   };
 }

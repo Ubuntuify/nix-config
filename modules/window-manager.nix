@@ -1,18 +1,27 @@
 {
-  systemUser,
   config,
   lib,
   ...
 }:
 with lib; let
-  cfg = config.home-manager.users.${systemUser};
+  configList = builtins.attrValues config.home-manager.users;
+  makeWindowManagerConfig = windowManager: let
+    definedPackages = builtins.catAttrs "wayland.windowManager.${windowManager}.package" configList;
+  in {
+    programs.${windowManager} = {
+      enable = builtins.any (cfg: cfg.wayland.windowManager.${windowManager}.enable) configList;
+
+      # We only get to choose one package for a window manager, so we'll have to compromise and pick the
+      # first one.
+      package = mkIf (lists.length definedPackages != 0) (builtins.elemAt definedPackages 0);
+    };
+  };
 in
-  # Do a dumb check if home-manager configures a specific window manager, and if so, enable the appropriate NixOS feature
   mkMerge [
-    (mkIf cfg.wayland.windowManager.sway.enable {
-      # TODO: make this code better.
-      # This won't work on multi-user systems.
-      programs.sway.enable = true;
-      programs.sway.package = cfg.wayland.windowManager.sway.package;
-    })
+    # Do a check if home-manager configures a specific window manager, and if so, enable the appropriate NixOS feature
+    (makeWindowManagerConfig "sway")
+    (makeWindowManagerConfig "hyprland")
+    {
+      environment.sessionVariables.NIXOS_OZONE_WL = 1; # enable wayland support for electron/chromium based apps.
+    }
   ]
