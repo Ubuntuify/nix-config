@@ -7,5 +7,4 @@
   helpers = import ./helpers.nix {inherit self inputs outputs;};
 in {
   inherit (helpers) mkDarwin mkHome mkNixos mkDroid forEachSupportedSystem;
-  asahi = import ./hardware-specific/asahi.nix {inherit self inputs outputs;};
 }

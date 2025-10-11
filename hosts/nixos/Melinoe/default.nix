@@ -15,7 +15,11 @@ in {
     modules.window-manager
   ];
 
-  hardware.asahi.peripheralFirmwareDirectory = outputs.lib.asahi.mkPeripheralFirmwareDirectory "sha256-9XuPmUICc+MBtRRX3SlIrLE1zspkR+OSaAtd0s6sWH4=";
+  # Custom settings for modules.hardware.asahi.
+  custom.asahi = {
+    firmwareHash = "sha256-9XuPmUICc+MBtRRX3SlIrLE1zspkR+OSaAtd0s6sWH4=";
+    hasTouchBar = true;
+  };
 
   services.xserver = {
     enable = true;
