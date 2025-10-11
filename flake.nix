@@ -7,6 +7,8 @@
   };
 
   inputs = {
+    self.submodules = true; # enable submodules support
+
     # Main system components (i.e. NixOS, nix-darwin, etc.)
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-darwin = {
@@ -18,6 +20,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager"; # nix-on-droid implements its own home-manager plugin, and
       # may not have the updates that home-manager currently has, lock it to prevent issues with current.
+    };
+
+    # Secrets manager
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # User components (such as for: setting up home directories, and homebrew)
