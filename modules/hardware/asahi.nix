@@ -4,8 +4,13 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }: {
+  imports = [
+    inputs.apple-silicon.nixosModules.apple-silicon-support # make sure that the Apple Silicon support module is loaded.
+  ];
+
   options.custom.asahi = {
     firmwareHash = lib.mkOption {
       type = lib.types.str;
@@ -16,36 +21,38 @@
 
   config = let
     inherit (config.custom.asahi) hasTouchBar showNotch firmwareHash;
-    # Flakes run in "pure" evaluation mode on nix, making them unable to simply require the <ESP>/asahi partition.
-    # Therefore, to make the system reproducible, it has to have the hash of the peripheral firmware directory.
-    #
-    # This simplifies the creation of one and simply requires the hash, while also providing instructions when
-    # errors happen.
-    mkPeripheralFirmwareDirectory = hash:
-      pkgs.requireFile {
-        inherit hash;
-        name = "asahi";
-        hashMode = "recursive";
-        message = ''
-          Linux on Apple Silicon requires proprietary firmware blobs taken from MacOS to function correctly, run the below command on your system, and if it doesn't work, try the following troubleshooting steps.
-
-          nix-store --add-fixed sha256 --recursive <path-to-asahi-esp>/asahi
-
-          #1) Is the hash of your firmware directory different from the one listed here? Check with `nix hash --algo sha256 <path-to-asahi-esp>/asahi`
-          #2) Is this your first install? Running this command on the installation environment won't work, and you'll have to first run without it and run it on the system itself before doing a switch.
-        '';
-      };
   in {
     environment.systemPackages = with pkgs; let
       reboot-macos = pkgs.writeShellScriptBin "reboot-macos" ''
-        ${lib.getExe pkgs.asahi-bless} --set-boot-macos --yes
+        sudo ${lib.getExe pkgs.asahi-bless} --set-boot-macos --yes
         echo "Rebooting to MacOS in five seconds..."
         sleep 5 && systemctl reboot
       '';
     in [asahi-bless reboot-macos];
 
     hardware.asahi.enable = true;
-    hardware.asahi.peripheralFirmwareDirectory = mkPeripheralFirmwareDirectory firmwareHash;
+    hardware.asahi.peripheralFirmwareDirectory = let
+      # Flakes run in "pure" evaluation mode on nix, making them unable to simply require the <ESP>/asahi partition.
+      # Therefore, to make the system reproducible, it has to have the hash of the peripheral firmware directory.
+      #
+      # This simplifies the creation of one and simply requires the hash, while also providing instructions when
+      # errors happen.
+      mkPeripheralFirmwareDirectory = hash:
+        pkgs.requireFile {
+          inherit hash;
+          name = "asahi";
+          hashMode = "recursive";
+          message = ''
+            Linux on Apple Silicon requires proprietary firmware blobs taken from MacOS to function correctly, run the below command on your system, and if it doesn't work, try the following troubleshooting steps.
+
+            nix-store --add-fixed sha256 --recursive <path-to-asahi-esp>/asahi
+
+            #1) Is the hash of your firmware directory different from the one listed here? Check with `nix hash --algo sha256 <path-to-asahi-esp>/asahi`
+            #2) Is this your first install? Running this command on the installation environment won't work, and you'll have to first run without it and run it on the system itself before doing a switch.
+          '';
+        };
+    in
+      mkPeripheralFirmwareDirectory firmwareHash;
 
     # You can't touch EFI variables on an Asahi Linux system, and doing so will cause the switch to fail.
     boot.loader.efi.canTouchEfiVariables = lib.mkForce false;

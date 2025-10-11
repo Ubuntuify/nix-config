@@ -13,6 +13,7 @@ in {
     modules.fonts
     modules.networking
     modules.window-manager
+    modules.display-manager.ly
   ];
 
   # Custom settings for modules.hardware.asahi.
@@ -26,13 +27,6 @@ in {
   };
 
   security.polkit.enable = true;
-
-  services.displayManager.ly = {
-    enable = true;
-    x11Support = true;
-  };
-
-  systemd.services.display-manager.environment.XDG_CURRENT_DESKTOP = "X-NIXOS-SYSTEMD-AWARE";
 
   boot = {
     supportedFilesystems = ["ntfs" "btrfs"];
