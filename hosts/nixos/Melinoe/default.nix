@@ -3,6 +3,7 @@
   systemUser,
   ...
 }: let
+  inherit (outputs) overlays;
   inherit (outputs.lib) modules;
 in {
   imports = [
@@ -23,6 +24,10 @@ in {
     hasTouchBar = true;
   };
 
+  nixpkgs.overlays = [
+    overlays.lix
+  ];
+
   services.xserver = {
     enable = true;
   };
@@ -30,12 +35,10 @@ in {
   security.polkit.enable = true;
 
   boot = {
-    supportedFilesystems = ["ntfs" "btrfs"];
-    loader = {
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 5;
-      };
+    supportedFilesystems = ["btrfs"];
+    loader.systemd-boot = {
+      enable = true;
+      configurationLimit = 5;
     };
     kernelParams = ["zswap.enabled=1" "zswap.compressor=zstd" "zswap.zpool=zsmalloc" "zswap.max_pool_percent=50"];
   };
