@@ -1,35 +1,26 @@
 {
   pkgs,
-  lib,
   options,
+  outputs,
   ...
-}: let
-  inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
-in
-  with lib;
-    mkMerge [
-      (mkIf isLinux (
-        if (builtins.hasAttr "hardware" options) # Hides from Nix that this block exists, as otherwise it will fail when building nix-darwin systems;
-        then {
-          home-manager.sharedModules = [{home.packages = with pkgs; [krita];}];
+}:
+outputs.lib.mkMultiSystemModule {
+  inherit pkgs options;
+  nixosModule = {
+    # Provide Krita to all users through home-manager, while keeping it in userspace.
+    # Home Manager is guaranteed to be loaded through the mkNixos and mkDarwin helper
+    # modules.
+    home-manager.sharedModules = [
+      {home.packages = [pkgs.krita];}
+    ];
+    hardware.opentabletdriver.enable = true;
+  };
+  darwinModule = {
+    # OpemTabletDriver and Krita is marked as broke on Darwin systems, forcing us to
+    # use the respective homebrew casks.
 
-          hardware.opentabletdriver.enable = true;
-        }
-        else {}
-      ))
-      (mkIf isDarwin (
-        if (builtins.hasAttr "homebrew" options) # Same reason, but vice versa; These should always evaluate to true, anyways.
-        then {
-          # Krita and OpenTabletDriver do not exist as nixpkgs (as they are marked as broken)
-          # on MacOS, and such, we have to use homebrew to substitute them.
-
-          homebrew = {
-            casks = [
-              "wacom-tablet"
-              "krita"
-            ];
-          };
-        }
-        else {}
-      ))
-    ]
+    # This only applies to Wacom tablets, and you may need to switch the cask if you
+    # are using a different drawing tablet.
+    homebrew.casks = ["wacom-tablet" "krita"];
+  };
+}

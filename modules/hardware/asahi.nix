@@ -28,7 +28,12 @@
         echo "Rebooting to MacOS in five seconds..."
         sleep 5 && systemctl reboot
       '';
-    in [asahi-bless reboot-macos];
+    in [
+      asahi-bless # allows switching boot device, similar to Startup Disk on MacOS (or the bless utility).
+
+      # Custom packages
+      reboot-macos
+    ];
 
     hardware.asahi.enable = true;
     hardware.asahi.peripheralFirmwareDirectory = let

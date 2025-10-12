@@ -3,7 +3,7 @@
   outputs,
   ...
 }: let
-  inherit (outputs) modules;
+  inherit (outputs.lib) modules;
 in {
   imports = [
     modules.hardware.nvidia

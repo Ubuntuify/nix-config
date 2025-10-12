@@ -3,11 +3,12 @@
   systemUser,
   ...
 }: let
-  inherit (outputs) modules;
+  inherit (outputs.lib) modules;
 in {
   imports = [
     ./hardware-configuration.nix
     modules.hardware.asahi
+    modules.kmscon
     modules.audio
     modules.drawing
     modules.fonts
