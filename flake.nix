@@ -72,7 +72,9 @@
 
   outputs = inputs @ {self, ...}: let
     inherit (self) outputs;
+    systems = import ./systems.nix {inherit inputs outputs;};
   in {
+
     # <prerequisite/required>
     # These are parts that are taken out for modules to work, they are necessary for some parts
     # of the flake to function properly and removing them should be taken care of carefully, by
@@ -95,31 +97,21 @@
     # This is where systems are defined, and, if required, their support modules, showing what
     # kind of system they are.
 
-    nixosConfigurations = {
+    nixosConfigurations = systems.nixosConfigurations
       #Afina = libx.mkNixos {hostname = "Afina";};
-      Andromeda = outputs.lib.mkNixos {
-        hostname = "Andromeda";
-        supportModules = [inputs.nixos-wsl.nixosModules.default];
-      };
       #Cassiopeia = outputs.lib.mkNixos {
       #  hostname = "Cassiopeia";
       #  system = "aarch64-linux";
-      #  supportModules = [inputs.nixos-wsl.nixosModules.default];
       #};
       #Persephone = outputs.lib.mkNixos {hostname = "Persephone";};
-      Melinoe = outputs.lib.mkNixos {
-        hostname = "Melinoe";
-        system = "aarch64-linux";
-        supportModules = [inputs.apple-silicon.nixosModules.apple-silicon-support];
-      };
-    };
+    
 
     darwinConfigurations = {
-      Pomegranate = outputs.lib.mkDarwin {hostname = "Pomegranate";};
+      Pomegranate = outputs.lib.helpers.mkDarwin {hostname = "Pomegranate";};
     };
 
     nixOnDroidConfigurations = {
-      default = outputs.lib.mkDroid {
+      default = outputs.lib.helpers.mkDroid {
         profile = "go";
         experimental.enable-lix = true;
       };

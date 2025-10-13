@@ -1,8 +1,10 @@
 {
   pkgs,
-  systemUser,
+  config,
   ...
-}: {
+}: let
+  inherit (config.custom) systemUser;
+in {
   # nix settings (includ. optimizations, automatic garbage collection)
   nix = {
     optimise.automatic = true;

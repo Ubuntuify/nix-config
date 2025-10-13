@@ -78,29 +78,48 @@ in {
     hostname,
     systemUser ? "ryans", # managing user/main admin account
     system ? "x86_64-linux",
-    supportModules ? [], # for systems that need extra support modules, such as NixOS-WSL and Apple Silicon
   }: let
     hostSpecificConf = builtins.toPath ../hosts/nixos/${hostname}/default.nix; # Since this config is more barren, do not test for if the config exists, it always should.
   in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = {inherit system self inputs outputs systemUser;}; # pass in the mkHome helper function, so the NixOS config can make users and home-manager configurations at will.
-      modules =
-        [
-          ../hosts/common/common-packages.nix
-          ../hosts/common/nixos-common.nix
-          inputs.home-manager.nixosModules.default
-          hostSpecificConf
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = {inherit self inputs outputs;};
-            networking.hostName = hostname;
-            nix.settings.experimental-features = ["nix-command" "flakes"];
-            system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";
-          } # NixOS configurations are often more varied, so do not define more
-        ]
-        ++ supportModules;
+      specialArgs = {inherit system self inputs outputs;};
+      modules = [
+        ../hosts/common/common-packages.nix
+        ../hosts/common/nixos-common.nix
+        inputs.home-manager.nixosModules.default
+        hostSpecificConf
+        ({
+          lib,
+          config,
+          ...
+        }: {
+          options.custom = {
+            systemUser = lib.mkOption {
+              type = lib.types.str;
+              default = "user";
+            };
+          };
+
+          config = {
+            custom.systemUser = systemUser;
+
+            users.users.${config.custom.systemUser} = lib.mkDefault {
+              isNormalUser = true;
+              createHome = true;
+              extraGroups = ["wheel"]; # The system user should have access to sudo, or any other elevation program.
+            };
+          };
+        })
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = {inherit self inputs outputs;};
+          networking.hostName = hostname;
+          nix.settings.experimental-features = ["nix-command" "flakes"];
+          system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";
+        } # NixOS configurations are often more varied, so do not define more
+      ];
     };
 
   mkHome = {

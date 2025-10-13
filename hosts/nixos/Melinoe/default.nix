@@ -38,7 +38,7 @@ in {
     supportedFilesystems = ["btrfs"];
     loader.systemd-boot = {
       enable = true;
-      configurationLimit = 5;
+      configurationLimit = 3;
     };
     kernelParams = ["zswap.enabled=1" "zswap.compressor=zstd" "zswap.zpool=zsmalloc" "zswap.max_pool_percent=50"];
   };
