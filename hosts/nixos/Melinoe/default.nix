@@ -1,6 +1,6 @@
 {
   outputs,
-  systemUser,
+  config,
   ...
 }: let
   inherit (outputs) overlays;
@@ -43,14 +43,14 @@ in {
     kernelParams = ["zswap.enabled=1" "zswap.compressor=zstd" "zswap.zpool=zsmalloc" "zswap.max_pool_percent=50"];
   };
 
-  users.users.${systemUser} = {
+  users.users.${config.custom.systemUser} = {
     isNormalUser = true;
     initialPassword = "nix-is-the-best";
     createHome = true;
     extraGroups = ["wheel"];
   };
 
-  home-manager.users.${systemUser} = outputs.lib.mkHome {options.system.graphical = true;};
+  home-manager.users.${config.custom.systemUser} = outputs.lib.helpers.mkHome {options.system.graphical = true;};
 
   users.mutableUsers = true;
 }

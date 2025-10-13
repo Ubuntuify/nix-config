@@ -74,42 +74,19 @@
     inherit (self) outputs;
     systems = import ./systems.nix {inherit inputs outputs;};
   in {
-
-    # <prerequisite/required>
-    # These are parts that are taken out for modules to work, they are necessary for some parts
-    # of the flake to function properly and removing them should be taken care of carefully, by
-    # checking if any part requires anything defined here.
-
     overlays = inputs.haumae.lib.load {
       src = ./overlays;
       inputs = {inherit inputs;};
     };
-
-    modules = inputs.haumae.lib.load {
-      src = ./modules;
-      loader = inputs.haumae.lib.loaders.verbatim;
-    };
-
     lib = import ./lib {inherit self inputs outputs;};
+    inherit (systems) nixosConfigurations darwinConfigurations;
 
-    # <system/configurations>
-    # This flake is, of course, a configuration flake for NixOS, nix-darwin, and nix-on-droid.
-    # This is where systems are defined, and, if required, their support modules, showing what
-    # kind of system they are.
-
-    nixosConfigurations = systems.nixosConfigurations
-      #Afina = libx.mkNixos {hostname = "Afina";};
-      #Cassiopeia = outputs.lib.mkNixos {
-      #  hostname = "Cassiopeia";
-      #  system = "aarch64-linux";
-      #};
-      #Persephone = outputs.lib.mkNixos {hostname = "Persephone";};
-    
-
-    darwinConfigurations = {
-      Pomegranate = outputs.lib.helpers.mkDarwin {hostname = "Pomegranate";};
-    };
-
+    #Afina = libx.mkNixos {hostname = "Afina";};
+    #Cassiopeia = outputs.lib.mkNixos {
+    #  hostname = "Cassiopeia";
+    #  system = "aarch64-linux";
+    #};
+    #Persephone = outputs.lib.mkNixos {hostname = "Persephone";};
     nixOnDroidConfigurations = {
       default = outputs.lib.helpers.mkDroid {
         profile = "go";

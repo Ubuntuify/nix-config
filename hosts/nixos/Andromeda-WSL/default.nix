@@ -15,5 +15,5 @@ in {
     overlays.lix
   ];
 
-  home-manager.users.${config.custom.systemUser} = outputs.lib.mkHome {};
+  home-manager.users.${config.custom.systemUser} = outputs.lib.helpers.mkHome {};
 }

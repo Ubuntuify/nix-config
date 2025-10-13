@@ -4,7 +4,8 @@
   config,
   ...
 }: let
-  inherit (outputs) overlays modules;
+  inherit (outputs) overlays;
+  inherit (outputs.lib) modules;
 in {
   imports = [
     modules.drawing

@@ -1,0 +1,10 @@
+[metadata]
+description = "NixOS Apple Silicon system (M2 Macbook Pro)"
+
+[system]
+hostname = "Melinoe"
+architecture = "aarch64-linux"
+
+[users]
+sysadmin = "ryans"
+

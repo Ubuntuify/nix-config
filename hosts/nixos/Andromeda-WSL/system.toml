@@ -1,0 +1,10 @@
+[metadata]
+description = "WSL system"
+
+[system]
+hostname = "Andromeda-WSL"
+architecture = "x86_64-linux"
+
+[users]
+sysadmin = "ryans"
+

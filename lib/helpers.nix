@@ -49,7 +49,7 @@ in {
             name = username;
             home = "/Users/${username}";
           };
-          home-manager.users.${username} = outputs.lib.mkHome {
+          home-manager.users.${username} = outputs.lib.helpers.mkHome {
             options = {
               user = username;
               system.graphical = lib.mkDefault true;
@@ -144,7 +144,7 @@ in {
         };
 
         config = {
-          home.username = name;
+          home.username = lib.mkForce name;
           # This needs to be set with mkDefault, as the nix-darwin module of home-manager
           # will throw an error otherwise if this is set.
           #
