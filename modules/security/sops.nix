@@ -1,5 +1,6 @@
 {
   inputs,
+  pkgs,
   lib,
   config,
   ...
@@ -17,8 +18,11 @@
   };
 
   config = {
+    services.openssh.enable = lib.mkDefault true; # OpenSSH is required
+    # for converting keys into sops keys, so set this as default.
+
     sops = lib.mkIf config.custom.security.sops.enable {
-      defaultSopsFile = ../../../secrets/secrets.yaml;
+      defaultSopsFile = ../../secrets/secrets.yaml;
       validateSopsFiles = true;
 
       age = {
@@ -27,5 +31,9 @@
         generateKey = true; # auto generates a key
       };
     };
+
+    # Add packages required for sops-nix secret keeping, so we don't have
+    # to add it to the profile manually.
+    environment.systemPackages = [pkgs.age pkgs.sops];
   };
 }

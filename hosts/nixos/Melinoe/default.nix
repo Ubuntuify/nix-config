@@ -9,6 +9,7 @@ in {
   imports = [
     ./hardware-configuration.nix
     modules.hardware.asahi
+    modules.security.sops
     modules.kmscon
     modules.audio
     modules.drawing

@@ -2,7 +2,7 @@ keys:
   - &users:
     - &aeacus age1qhtnlzmvhls3awahc67cptu8fru5p9x4yqcqcuv0qw90vcywlexstjgdfc
   - &hosts:
-    - &melinoe
+    - &melinoe age1csl4zmvjllk9h3lvlttzyxgp6gx8g0lknqda4qrwh959la55ze4q05jpwf
 creation_rules:
   - path_regex: secrets/secrets.yaml$
     key_groups:
