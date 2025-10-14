@@ -10,6 +10,7 @@
 
   # Make all helper functions available through outputs.lib.helpers.
   helpers = import ./helpers.nix {inherit self inputs outputs;};
+  internal = import ./internal {inherit self inputs outputs;};
 
   # Load in NixOS and Darwin modules through haumae (which works like a traditional scripting system, like Python.)
   modules = inputs.haumae.lib.load {

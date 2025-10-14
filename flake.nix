@@ -80,6 +80,7 @@
     };
     lib = import ./lib {inherit self inputs outputs;};
     inherit (systems) nixosConfigurations darwinConfigurations;
+    formatter = outputs.lib.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
 
     #Afina = libx.mkNixos {hostname = "Afina";};
     #Cassiopeia = outputs.lib.mkNixos {
@@ -97,7 +98,5 @@
     # <extra/misc>
     # These are development requirements or miscellaneous configurations that are not required
     # for the flake. Anything defined below can be removed with little to no issue.
-
-    formatter = outputs.lib.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
   };
 }

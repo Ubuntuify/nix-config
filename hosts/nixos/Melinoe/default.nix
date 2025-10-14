@@ -50,7 +50,9 @@ in {
     extraGroups = ["wheel"];
   };
 
-  home-manager.users.${config.custom.systemUser} = outputs.lib.helpers.mkHome {options.system.graphical = true;};
+  home-manager.users.${config.custom.systemUser} = outputs.lib.helpers.mkHome config.custom.systemUser {machine.graphics = true;};
 
   users.mutableUsers = true;
+
+  system.stateVersion = "25.11";
 }

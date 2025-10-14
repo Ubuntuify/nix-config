@@ -1,8 +1,12 @@
 {
+  inputs,
   pkgs,
-  self,
   ...
 }: {
+  imports = [
+    inputs.nvf.homeManagerModules.default # make sure the NVF home manager module is imported.
+  ];
+
   programs.nvf = {
     enable = true;
     settings = {

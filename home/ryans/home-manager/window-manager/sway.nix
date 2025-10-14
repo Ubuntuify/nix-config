@@ -4,9 +4,13 @@
   config,
   ...
 }: let
-  cfg = config.home-manager-options;
+  cfg = config.custom;
 in
-  lib.mkIf (pkgs.stdenv.isLinux && cfg.system.graphical) {
+  lib.mkIf (builtins.all (self: self) [
+    pkgs.stdenv.hostPlatform.isLinux
+    cfg.machine.graphics
+    (cfg.linux.window-manager == "sway")
+  ]) {
     home.packages = with pkgs; [
       walker
       autotiling-rs
@@ -48,7 +52,7 @@ in
         output = {
           "*" = {
             # sets background to all screens
-            background = "${../../../themes/background/pink/astronaut-space.png} fill";
+            background = "${../../../../themes/background/pink/astronaut-space.png} fill";
           };
 
           eDP-1 = {

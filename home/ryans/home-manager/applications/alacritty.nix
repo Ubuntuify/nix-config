@@ -3,17 +3,16 @@
   config,
   lib,
   ...
-}:
-with lib; let
-  cfg = config.home-manager-options;
+}: let
+  cfg = config.custom;
 in
-  mkIf cfg.system.graphical
+  lib.mkIf cfg.machine.graphics
   {
     programs.alacritty = {
       enable = true;
       package = pkgs.alacritty-graphics; # use a fork with sixel support (display images)
       settings = lib.mkMerge [
-        (builtins.fromTOML (builtins.readFile ../../../themes/alacritty/rose-pine.toml))
+        (builtins.fromTOML (builtins.readFile ../../../../themes/alacritty/rose-pine.toml))
         (lib.mkIf pkgs.stdenv.isDarwin {
           window.blur = true;
           window.opacity = 0.8;

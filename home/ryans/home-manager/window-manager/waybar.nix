@@ -4,9 +4,13 @@
   lib,
   ...
 }: let
-  cfg = config.home-manager-options;
+  cfg = config.custom;
 in
-  lib.mkIf (cfg.system.graphical && pkgs.stdenv.isLinux) {
+  lib.mkIf (builtins.all (self: self) [
+    cfg.machine.graphics
+    pkgs.stdenv.isLinux
+    (cfg.linux.window-manager != null)
+  ]) {
     programs.waybar = {
       enable = true;
       settings = [

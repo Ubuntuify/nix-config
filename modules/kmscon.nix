@@ -4,9 +4,6 @@
     hwRender = true;
     useXkbConfig = true;
     extraOptions = "--term xterm-256color";
-    extraConfig = ''
-      hwaccel
-    '';
     fonts = [
       {
         name = "Terminess Nerd Font Mono";

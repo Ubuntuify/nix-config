@@ -49,12 +49,7 @@ in {
             name = username;
             home = "/Users/${username}";
           };
-          home-manager.users.${username} = outputs.lib.helpers.mkHome {
-            options = {
-              user = username;
-              system.graphical = lib.mkDefault true;
-            };
-          };
+          home-manager.users.${username} = outputs.lib.helpers.mkHome "ryans" {};
           home-manager.sharedModules = [
             inputs.mac-app-util.homeManagerModules.default
             {targets.darwin.linkApps.enable = false;} # disables the symlinks made in ~/Applications/Home Manager Apps which don't work for Spotlight anyways
@@ -89,83 +84,26 @@ in {
         ../hosts/common/nixos-common.nix
         inputs.home-manager.nixosModules.default
         hostSpecificConf
-        ({
-          lib,
-          config,
-          ...
-        }: {
-          options.custom = {
-            systemUser = lib.mkOption {
-              type = lib.types.str;
-              default = "user";
-            };
+        ({config, ...}: {
+          custom.systemUser = systemUser;
+          users.users.${config.custom.systemUser} = lib.mkDefault {
+            isNormalUser = true;
+            createHome = true;
+            extraGroups = ["wheel"]; # The system user should have access to sudo, or any other elevation program.
           };
-
-          config = {
-            custom.systemUser = systemUser;
-
-            users.users.${config.custom.systemUser} = lib.mkDefault {
-              isNormalUser = true;
-              createHome = true;
-              extraGroups = ["wheel"]; # The system user should have access to sudo, or any other elevation program.
-            };
-          };
-        })
-        {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = {inherit self inputs outputs;};
           networking.hostName = hostname;
           nix.settings.experimental-features = ["nix-command" "flakes"];
           system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";
-        } # NixOS configurations are often more varied, so do not define more
+          # NixOS configurations are often more varied, so do not define more
+        })
       ];
     };
 
-  mkHome = {
-    config-name ? "ryans",
-    options ? {user = "ryans";},
-  }:
-    lib.mkMerge [
-      ../home/${config-name}/default.nix
-      inputs.nvf.homeManagerModules.default
-      {home-manager-options = options;} # pass in the options for home-manager as config.home-manager-options
-      ({pkgs, ...} @ args: let
-        name = options.user or config-name;
-      in {
-        options.home-manager-options = {
-          user = lib.mkOption {
-            # user automatically generates the username and home directory according
-            # to the defaults of the OS, such as /home/${user} for Linux and /Users/${user}
-            # on Darwin/MacOS
-            type = lib.types.str;
-            description = "User of this home-manager configuration";
-          };
-        };
-
-        config = {
-          home.username = lib.mkForce name;
-          # This needs to be set with mkDefault, as the nix-darwin module of home-manager
-          # will throw an error otherwise if this is set.
-          #
-          # It should also be defined as default as anachronistic systems which may not follow
-          # the FHS/MacOS standard for home directories may override this setting.
-          home.homeDirectory = lib.mkDefault (
-            if pkgs.stdenv.hostPlatform.isDarwin
-            then "/Users/${name}"
-            else "/home/${name}"
-          );
-
-          # This option does not exist on darwin systems, therefore should not be set if the
-          # host system is not Linux.
-          #
-          # NixOS setups should setup using the included home-manager NixOS module, so
-          # detecting the config attribute passed over should work well enough.
-          targets.genericLinux.enable = lib.mkIf (pkgs.stdenv.hostPlatform.isLinux) (!builtins.hasAttr "nixosConfig" args);
-          programs.home-manager.enable = true;
-        };
-      })
-    ];
+  mkHome = config-name: options:
+    lib.mkMerge ((outputs.lib.internal.mkHomeModules ../home config-name) ++ [{custom = options;}]);
 
   mkDroid = {
     profile ? "full",

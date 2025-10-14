@@ -79,7 +79,7 @@ in {
     lib.mkIf (!nixosConfig.programs.nh.enable or (!isNixOS)) {
       enable = true;
       darwinFlake = defaultFlakeLocation;
-      homeFlake = mkIf (builtins.hasAttr "darwinConfig" args) "${config.xdg.dataHome}/nix-config";
+      homeFlake = mkIf (builtins.hasAttr "darwinConfig" args) defaultFlakeLocation;
       clean = {
         enable = true;
         dates = "weekly";

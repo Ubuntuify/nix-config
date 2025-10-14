@@ -18,7 +18,7 @@ in {
           inherit (systemMetadata) system;
         in
           outputs.lib.helpers.mkNixos {
-            system = system.architecture;
+            system = system.architecture or "x86_64-linux";
             hostname = system.hostname or host;
             systemUser = lib.mkIf (builtins.hasAttr "users" systemMetadata) systemMetadata.users.sysadmin;
           }
@@ -39,6 +39,7 @@ in {
           outputs.lib.helpers.mkDarwin {
             hostname = systemMetadata.system.hostname or host;
             username = systemMetadata.users.sysadmin or "ryans";
+            system = systemMetadata.system.architecture or "aarch64-darwin"; # set the default to Apple Silicon, because who uses an actual x86_64 Mac anyways (unless it's a Hackintosh or something)
           }
         else null)
       systems;
