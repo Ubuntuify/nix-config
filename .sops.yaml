@@ -1,0 +1,11 @@
+keys:
+  - &users:
+    - &aeacus age1qhtnlzmvhls3awahc67cptu8fru5p9x4yqcqcuv0qw90vcywlexstjgdfc
+  - &hosts:
+    - &melinoe
+creation_rules:
+  - path_regex: secrets/secrets.yaml$
+    key_groups:
+    - age:
+      - *aeacus
+      - *melinoe
