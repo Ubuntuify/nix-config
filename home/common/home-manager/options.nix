@@ -2,7 +2,7 @@
   options.custom = {
     machine = {
       graphics = let
-        isNixDarwin = builtins.hasAttrs "darwinConfig" args;
+        isNixDarwin = builtins.hasAttr "darwinConfig" args;
       in
         lib.mkOption {
           type = lib.types.bool;
