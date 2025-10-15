@@ -1,0 +1,9 @@
+[metadata]
+description = "MacOS system (M2 Macbook Pro)"
+
+[system]
+hostname = "Pomegranate"
+architecture = "aarch64-darwin"
+
+[users]
+sysadmin = "ryan"
