@@ -44,14 +44,10 @@ in {
     kernelParams = ["zswap.enabled=1" "zswap.compressor=zstd" "zswap.zpool=zsmalloc" "zswap.max_pool_percent=50"];
   };
 
-  users.users.${config.custom.systemUser} = {
-    isNormalUser = true;
-    initialPassword = "nix-is-the-best";
-    createHome = true;
-    extraGroups = ["wheel"];
+  home-manager.users.${config.custom.systemUser} = outputs.lib.system.mkHomeEntry {
+    user = config.custom.systemUser;
+    options = {machine.graphics = true;};
   };
-
-  home-manager.users.${config.custom.systemUser} = outputs.lib.helpers.mkHome config.custom.systemUser {machine.graphics = true;};
 
   users.mutableUsers = true;
 

@@ -1,7 +1,12 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}:
+lib.mkDefault {
   # Nix on Droid functions very differently from NixOS and nix-darwin, and such the modules there cannot be used on Nix on Droid
   # This is not a bug, and is intended behavior, therefore all packages for android should be defined here again, even if they're
-  # available in ./common-packages.nix
+  # available in ../packages.nix or any other file from that folder.
 
   terminal.font = let
     fontDirectory = "fonts/truetype";
