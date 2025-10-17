@@ -7,9 +7,11 @@
   inherit (outputs) overlays;
   inherit (outputs.lib) modules;
 in {
-  imports = [
-    modules.drawing
-  ];
+  imports =
+    [
+      modules.drawing
+    ]
+    ++ (outputs.lib.system.darwin.mkUserModules ["ryans"]);
 
   nixpkgs.overlays = [
     overlays.lix
@@ -41,4 +43,6 @@ in {
   };
 
   programs.fish.enable = true;
+
+  system.stateVersion = 6;
 }

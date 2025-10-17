@@ -81,22 +81,5 @@
     lib = import ./lib {inherit self inputs outputs;};
     inherit (systems) nixosConfigurations darwinConfigurations;
     formatter = outputs.lib.forEachSupportedSystem ({pkgs}: pkgs.alejandra);
-
-    #Afina = libx.mkNixos {hostname = "Afina";};
-    #Cassiopeia = outputs.lib.mkNixos {
-    #  hostname = "Cassiopeia";
-    #  system = "aarch64-linux";
-    #};
-    #Persephone = outputs.lib.mkNixos {hostname = "Persephone";};
-    nixOnDroidConfigurations = {
-      default = outputs.lib.helpers.mkDroid {
-        profile = "go";
-        experimental.enable-lix = true;
-      };
-    };
-
-    # <extra/misc>
-    # These are development requirements or miscellaneous configurations that are not required
-    # for the flake. Anything defined below can be removed with little to no issue.
   };
 }

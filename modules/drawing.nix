@@ -4,7 +4,7 @@
   outputs,
   ...
 }:
-outputs.lib.mkMultiSystemModule {
+outputs.lib.system.mkMultiSystemModule {
   inherit pkgs options;
   nixosModule = {
     # Provide Krita to all users through home-manager, while keeping it in userspace.
