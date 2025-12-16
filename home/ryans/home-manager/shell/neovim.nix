@@ -1,5 +1,6 @@
 {
   inputs,
+  lib,
   pkgs,
   ...
 }: {
@@ -66,33 +67,35 @@
         };
       };
 
-      vim.languages = {
-        enableTreesitter = true;
-        enableFormat = true;
-
-        # enabling required language support here
-        nix.enable = true;
-        svelte.enable = true;
-        ts.enable = true;
-        rust.enable = true;
-        python.enable = true;
-        bash.enable = true;
-
-        nix.lsp.server = "nixd";
-        nix.lsp.options = let
-          getExpression = search: ''
-            let
-              flake = (builtins.getFlake (builtins.toString ./.));
-              inherit (flake.inputs.nixpkgs) lib;
-            in
-              lib.concatMap (x: x.options) (lib.attrsets.attrValues flake.${search})
-          '';
-        in {
-          nixos.expr = getExpression "nixosConfigurations";
-          home_manager.expr = getExpression "homeConfigurations";
-          nix-darwin.expr = getExpression "darwinConfigurations";
-        };
-      };
+      vim.languages = let
+        mkLanguageConfig = enabledLanguages:
+          builtins.listToAttrs ([
+              # equivalent to setting the ff:
+              {
+                name = "enableTreesitter";
+                value = true;
+              } # vim.languages.enableTreesitter = true;
+              {
+                name = "enableFormat";
+                value = true;
+              } # vim.languages.enableFormat = true;
+            ]
+            ++ (
+              # Map the following to make every value given equivalent to:
+              # vim.languages.${lang}.enabled = true; (for each and every string passed in the array)
+              builtins.map (x: {
+                name = x;
+                value = {enable = true;};
+              })
+              enabledLanguages
+            ));
+      in
+        lib.mkMerge [
+          {
+            nix.lsp.servers = ["nixd"];
+          }
+          (mkLanguageConfig ["nix" "svelte" "ts" "rust" "python" "bash"])
+        ];
     };
   };
 

@@ -44,6 +44,8 @@ in
         terminal = "${config.programs.alacritty.package}/bin/alacritty";
         menu = "${pkgs.walker}/bin/walker";
 
+        window.titlebar = false;
+
         bars = [{command = "${pkgs.waybar}/bin/waybar";}];
         focus = {
           followMouse = "yes";
