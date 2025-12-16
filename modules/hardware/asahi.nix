@@ -66,5 +66,12 @@
     # respectively.
     hardware.apple.touchBar.enable = hasTouchBar;
     boot.kernelParams = lib.optionals showNotch ["apple_dcp.show_notch=1"];
+
+    # Nix settings (enable custom substituter for apple-silicon)
+    # see https://github.com/nix-community/nixos-apple-silicon/blob/main/docs/binary-cache.md for more info
+    nix.settings = {
+      extra-substituters = ["https://nixos-apple-silicon.cachix.org"];
+      extra-trusted-private-keys = ["nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="];
+    };
   };
 }
