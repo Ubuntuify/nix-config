@@ -2,7 +2,7 @@
 description = "WSL system"
 
 [system]
-hostname = "Andromeda-WSL"
+hostname = "Andromeda"
 architecture = "x86_64-linux"
 
 [users]
