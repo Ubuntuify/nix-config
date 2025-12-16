@@ -4,30 +4,31 @@
   config,
   ...
 } @ args: let
-  userEmail = "ryanconrad2007@gmail.com";
-  userName = "Ryan Salazar";
   pinentryPackage =
     if !pkgs.stdenv.isDarwin
     then pkgs.pinentry-tty
     else pkgs.pinentry_mac;
 in {
   programs.git = {
-    inherit userName;
-    inherit userEmail;
-
     enable = true;
-    signing.format = "openpgp";
-    signing.signByDefault = true;
 
-    extraConfig = {
+    settings = {
+      user = {
+        email = "ryanconrad2007@gmail.com";
+        name = "Ryan Salazar";
+      };
+
+      aliases = {
+        "a" = "add --all";
+        "p" = "push";
+        "pf" = "push --force";
+      };
+
       gpg.ssh.allowedSignersFile = "${config.home.homeDirectory}/.ssh/allowed_signers";
     };
 
-    aliases = {
-      "a" = "add --all";
-      "p" = "push";
-      "pf" = "push --force";
-    };
+    signing.format = "openpgp";
+    signing.signByDefault = true;
   };
 
   programs.lazygit = {
