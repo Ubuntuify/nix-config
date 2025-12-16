@@ -7,10 +7,12 @@
   inherit (outputs.lib) modules;
 in {
   imports = [
-    ./hardware-configuration.nix
+    ./generated/hardware-configuration.nix
+    ./system-specific/bootloader.nix
+    ./system-specific/miscellaneous.nix
+    ./system-specific/swap.nix
     modules.hardware.asahi
     modules.security.sops
-    modules.kmscon
     modules.audio
     modules.drawing
     modules.fonts
@@ -19,7 +21,8 @@ in {
     modules.display-manager.ly
   ];
 
-  # Custom settings for modules.hardware.asahi.
+  # Options required for Asahi (apple-silicon)'s hardware module, such as providing the firmware hash
+  # for pure flakes, and other options like touch bar support.
   custom.asahi = {
     firmwareHash = "sha256-9XuPmUICc+MBtRRX3SlIrLE1zspkR+OSaAtd0s6sWH4=";
     hasTouchBar = true;
@@ -29,20 +32,8 @@ in {
     overlays.lix
   ];
 
-  services.xserver = {
-    enable = true;
-  };
-
+  services.xserver.enable = true;
   security.polkit.enable = true;
-
-  boot = {
-    supportedFilesystems = ["btrfs"];
-    loader.systemd-boot = {
-      enable = true;
-      configurationLimit = 3;
-    };
-    kernelParams = ["zswap.enabled=1" "zswap.compressor=zstd" "zswap.zpool=zsmalloc" "zswap.max_pool_percent=50"];
-  };
 
   home-manager.users.${config.custom.systemUser} = outputs.lib.system.mkHomeEntry {
     user = config.custom.systemUser;
