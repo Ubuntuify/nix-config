@@ -11,6 +11,12 @@ in
     pkgs.stdenv.isLinux
     (cfg.linux.window-manager != null)
   ]) {
+    # When changing the font used in the style sheet, please change the font installed here.
+    home.packages = with pkgs; [
+      nerd-fonts.departure-mono
+    ];
+
+    # Waybar options (configuration, style sheet located at ./waybar-style.css);
     programs.waybar = {
       enable = true;
       settings = [
