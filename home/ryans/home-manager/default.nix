@@ -7,6 +7,7 @@
     ./shell/lf.nix
     ./shell/neovim.nix
     ./shell/utilities.nix
+    ./utilities/walker.nix
     ./window-manager/sway.nix
     ./window-manager/waybar.nix
   ];

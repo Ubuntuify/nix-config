@@ -4,12 +4,11 @@
   outputs,
   ...
 }: let
-  importLibrary = module: import module {inherit self inputs outputs;};
-
-  internal = importLibrary ./internal/default.nix;
+  mkLib = module: import module {inherit self inputs outputs;};
 in {
   # Top-level functions (frequently used functions - or common enough that they get brought out)
-  inherit internal;
+  __internal__ = mkLib ./__internal__;
+
   inherit (outputs.lib.system) forEachSupportedSystem;
 
   # Functions that are used to mess with systems (like creating system modules, creating system configurations
@@ -18,11 +17,11 @@ in {
   # Often rely on the internal library, so if you are making changes there, check on the implementations located
   # in ./system.nix and ./system-modules.nix
   system = {
-    inherit (importLibrary ./system.nix) forEachSupportedSystem mkNixos mkDarwin mkHomeEntry mkTopLevelHomeCfg;
-    inherit (importLibrary ./system-modules.nix) mkMultiSystemModule mkDarwinModule mkNixosModule;
+    inherit (mkLib ./system.nix) forEachSupportedSystem mkNixos mkDarwin mkHomeEntry mkTopLevelHomeCfg;
+    inherit (mkLib ./system-modules.nix) mkMultiSystemModule mkDarwinModule mkNixosModule;
 
-    darwin = importLibrary ./system/darwin.nix;
-    nixos = importLibrary ./system/nixos.nix;
+    darwin = mkLib ./system/darwin.nix;
+    nixos = mkLib ./system/nixos.nix;
   };
 
   # Modules used by system configurations (also known as: NixOS or nix-darwin modules, though not all of them are

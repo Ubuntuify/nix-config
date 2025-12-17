@@ -14,10 +14,11 @@ in {
   inherit (home) mkHomeConfiguration mkHomeModules;
   inherit (users) getUserCfgs;
 
-  # Simple functions
+  # Naive approach to getting "common modules," which should be imported non-discriminantly, therefore
+  # this simple function.
   getCommonModulePaths = path: let
-    commonPathRead = builtins.readDir path;
+    files = builtins.readDir path;
   in
-    builtins.map (file: builtins.toPath (path + "/${file}")) (builtins.filter (obj: commonPathRead.${obj} != "directory")
-      (builtins.attrNames commonPathRead));
+    builtins.map (file: builtins.toPath (path + "/${file}")) (builtins.filter (obj: files.${obj} != "directory")
+      (builtins.attrNames files));
 }

@@ -10,7 +10,10 @@
     inputs.home-manager.lib.homeManagerConfiguration {
       extraSpecialArgs = {inherit self inputs outputs;};
       modules =
-        outputs.lib.internal.mkHomeModules pathToHomeModules user
+        outputs.lib.__internal__.mkHomeModules pathToHomeModules user
+        # Imports modules from mkHomeModules, leaving one implementation, mkHomeModules are often
+        # used with home-manager's NixOS and nix-darwin plugins, while this is left for usage with
+        # a standalone setup.
         ++ [
           {custom = options;} # Set custom options;
         ];
@@ -26,5 +29,5 @@
     [
       (builtins.toPath (pathToHomeModules + "/${user}/home-manager/default.nix"))
     ]
-    ++ (outputs.lib.internal.getCommonModulePaths (pathToHomeModules + "/common/home-manager"));
+    ++ (outputs.lib.__internal__.getCommonModulePaths (pathToHomeModules + "/common/home-manager"));
 }

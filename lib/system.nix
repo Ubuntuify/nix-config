@@ -15,7 +15,7 @@
     system.configurationRevision = self.rev or "dirty-${self.lastModifiedDate}";
     nix.settings.experimental-features = ["nix-command" "flakes"];
   };
-  universalCommonModules = outputs.lib.internal.getCommonModulePaths ../hosts/common;
+  universalCommonModules = outputs.lib.__internal__.getCommonModulePaths ../hosts/common;
   specialArgs = {inherit self inputs outputs;};
 in {
   forEachSupportedSystem = f:
@@ -47,7 +47,7 @@ in {
           (mkCommonModule hostname sysadmin)
           hostSpecificConf
         ]
-        ++ (outputs.lib.internal.getCommonModulePaths ../hosts/common/darwin) ++ universalCommonModules;
+        ++ (outputs.lib.__internal__.getCommonModulePaths ../hosts/common/darwin) ++ universalCommonModules;
     };
 
   mkNixos = {
@@ -62,18 +62,18 @@ in {
           (mkCommonModule hostname sysadmin)
           ../hosts/nixos/${hostname}/default.nix
         ]
-        ++ (outputs.lib.internal.getCommonModulePaths ../hosts/common/nixos) ++ universalCommonModules;
+        ++ (outputs.lib.__internal__.getCommonModulePaths ../hosts/common/nixos) ++ universalCommonModules;
     };
 
   mkHomeEntry = {
     user,
     options ? {},
   }:
-    lib.mkMerge ((outputs.lib.internal.mkHomeModules ../home user) ++ [{custom = options;}]);
+    lib.mkMerge ((outputs.lib.__internal__.mkHomeModules ../home user) ++ [{custom = options;}]);
 
   mkTopLevelHomeCfg = {
     user,
     options ? {},
   }:
-    outputs.lib.internal.mkHomeConfiguration ../home user options;
+    outputs.lib.__internal__.mkHomeConfiguration ../home user options;
 }

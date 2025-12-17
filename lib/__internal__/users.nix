@@ -15,8 +15,5 @@ in {
   # of users you want to have in your system.
   #
   getUserCfgs = users: path: system:
-    builtins.map (
-      user: import (getUserCfgModule {inherit user path system;}) {inherit self inputs outputs;}
-    )
-    users;
+    builtins.map (user: (getUserCfgModule {inherit user path system;})) users;
 }
