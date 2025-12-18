@@ -11,6 +11,7 @@ in {
     ./system-specific/bootloader.nix
     ./system-specific/miscellaneous.nix
     ./system-specific/swap.nix
+    ./overrides/mesa.nix
     modules.hardware.asahi
     modules.security.sops
     modules.audio
