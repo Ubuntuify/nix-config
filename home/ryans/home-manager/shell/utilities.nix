@@ -13,7 +13,7 @@ in {
   };
 
   programs.cava = {
-    enable = true;
+    enable = !pkgs.stdenv.hostPlatform.isDarwin;
     settings = {
       color = {
         background = "'#232136'";
