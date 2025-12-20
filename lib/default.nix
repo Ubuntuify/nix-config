@@ -19,9 +19,6 @@ in {
   system = {
     inherit (mkLib ./system.nix) forEachSupportedSystem mkNixos mkDarwin mkHomeEntry mkTopLevelHomeCfg;
     inherit (mkLib ./system-modules.nix) mkMultiSystemModule mkDarwinModule mkNixosModule;
-
-    darwin = mkLib ./system/darwin.nix;
-    nixos = mkLib ./system/nixos.nix;
   };
 
   # Modules used by system configurations (also known as: NixOS or nix-darwin modules, though not all of them are
