@@ -18,12 +18,6 @@ in {
         name = "Ryan Salazar";
       };
 
-      aliases = {
-        "a" = "add --all";
-        "p" = "push";
-        "pf" = "push --force";
-      };
-
       gpg.ssh.allowedSignersFile = "${config.home.homeDirectory}/.ssh/allowed_signers";
     };
 

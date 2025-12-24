@@ -17,6 +17,7 @@ in
       mako
       xwayland-satellite
       grim
+      brightnessctl
       sway-contrib.inactive-windows-transparency
       sway-contrib.grimshot
 
@@ -117,6 +118,8 @@ in
           # special keyboard bindings (media keys, etc.)
           "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
           "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+          "XF86MonBrightnessUp" = "exec ${lib.getExe pkgs.brightnessctl} set 2.5%+";
+          "XF86MonBrightnessDown" = "exec ${lib.getExe pkgs.brightnessctl} set 2.5%-";
           "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
           "XF86AudioPlay" = "exec playerctl play-pause";

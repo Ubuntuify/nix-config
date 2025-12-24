@@ -11,5 +11,5 @@ in
     cfg.machine.graphics
     (cfg.linux.window-manager != null)
   ]) {
-    services.walker.enable = true;
+    services.walker = {enable = true;};
   }
