@@ -20,6 +20,21 @@ in {
     home = "/Users/${user}";
   };
 
+  # These apps are things that I, (this user), uses, so they shouldn't be a common
+  # module.
+  homebrew = {
+    casks = [
+      "rectangle"
+      "calibre"
+      "discord"
+      "griska/griska/neardrop"
+    ];
+    masApps = {
+      # These are Mac Store applications, defined with an ID.
+      "DaVinci Resolve" = 571213070;
+    };
+  };
+
   home-manager.users.${user} = outputs.lib.system.mkHomeEntry {
     user = "ryans"; # use *this* specific configuration
   };
