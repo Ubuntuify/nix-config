@@ -1,15 +1,14 @@
 {
   outputs,
+  modules,
   config,
   ...
 }: let
   inherit (outputs) overlays;
-  inherit (outputs.lib) modules;
 in {
   imports = [
     ./generated/hardware-configuration.nix
     ./system-specific/bootloader.nix
-    ./system-specific/miscellaneous.nix
     ./system-specific/swap.nix
     ./overrides/mesa.nix
     modules.hardware.asahi
@@ -36,7 +35,7 @@ in {
   services.xserver.enable = true;
   security.polkit.enable = true;
 
-  home-manager.users.${config.custom.systemUser} = outputs.lib.system.mkHomeEntry {
+  home-manager.users.${config.custom.systemUser} = outputs.lib.sysconfig.mkHomeEntry {
     user = config.custom.systemUser;
     options = {machine.graphics = true;};
   };

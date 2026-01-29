@@ -1,14 +1,14 @@
 {
   config,
+  modules,
   outputs,
   ...
 }: let
-  inherit (outputs.lib) modules;
   inherit (outputs) overlays;
 in {
   imports = [
     modules.hardware.nvidia
-    modules.wsl.default
+    modules.hardware.wsl.default
   ];
 
   nixpkgs.overlays = [

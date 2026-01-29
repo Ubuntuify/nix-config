@@ -5,7 +5,15 @@
   ...
 }: let
   inherit (inputs.nixpkgs) lib;
-  supportedSystems = ["aarch64-darwin" "x86_64-linux" "aarch64-linux"];
+
+  # These are extra modules that will allow configuring both nix-darwin and NixOS systems.
+  modules = let
+    inherit (inputs.haumae) lib;
+  in
+    lib.load {
+      src = ../modules;
+      loader = lib.loaders.verbatim;
+    };
 
   # These are modules required to create Darwin and NixOS systems, mess with them wisely and expect
   # either breakage, or heavy refactoring, depending on how much the behavior is relied upon.
@@ -16,17 +24,8 @@
     nix.settings.experimental-features = ["nix-command" "flakes"];
   };
   universalCommonModules = outputs.lib.__internal__.getCommonModulePaths ../hosts/common;
-  specialArgs = {inherit self inputs outputs;};
+  specialArgs = {inherit self inputs outputs modules;};
 in {
-  forEachSupportedSystem = f:
-    lib.genAttrs supportedSystems (system:
-      f {
-        pkgs = import inputs.nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        };
-      });
-
   mkDarwin = {
     hostname,
     sysadmin ? "ryan",
@@ -69,11 +68,11 @@ in {
     user,
     options ? {},
   }:
-    lib.mkMerge ((outputs.lib.__internal__.mkHomeModules ../home user) ++ [{custom = options;}]);
+    lib.mkMerge ((outputs.lib.home.mkHomeModules ../home user) ++ [{custom = options;}]);
 
   mkTopLevelHomeCfg = {
     user,
     options ? {},
   }:
-    outputs.lib.__internal__.mkHomeConfiguration ../home user options;
+    outputs.lib.home.mkHomeConfiguration ../home user options;
 }

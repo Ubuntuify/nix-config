@@ -17,7 +17,7 @@ in {
           systemMetadata = builtins.fromTOML (builtins.readFile (systemPath + "/${host}/system.toml"));
           inherit (systemMetadata) system;
         in
-          outputs.lib.system.mkNixos {
+          outputs.lib.sysconfig.mkNixos {
             system = system.architecture or "x86_64-linux";
             hostname = system.hostname or host;
             sysadmin = lib.mkIf (builtins.hasAttr "users" systemMetadata) systemMetadata.users.sysadmin;
@@ -36,7 +36,7 @@ in {
         then let
           systemMetadata = builtins.fromTOML (builtins.readFile (systemPath + "/${host}/system.toml"));
         in
-          outputs.lib.system.mkDarwin {
+          outputs.lib.sysconfig.mkDarwin {
             hostname = systemMetadata.system.hostname or host;
             sysadmin = systemMetadata.users.sysadmin or "ryans";
             system = systemMetadata.system.architecture or "aarch64-darwin"; # set the default to Apple Silicon, because who uses an actual x86_64 Mac anyways (unless it's a Hackintosh or something)

@@ -24,9 +24,8 @@
   in {
     environment.systemPackages = with pkgs; let
       reboot-macos = pkgs.writeShellScriptBin "reboot-macos" ''
-        sudo ${lib.getExe pkgs.asahi-bless} --set-boot-macos --yes
-        echo "Rebooting to MacOS in five seconds..."
-        sleep 5 && systemctl reboot
+        sudo ${lib.getExe pkgs.asahi-bless} --set-boot-macos --yes \
+          && echo "Rebooting to MacOS in five seconds..." && sleep 5 && systemctl reboot
       '';
     in [
       asahi-bless # allows switching boot device, similar to Startup Disk on MacOS (or the bless utility).
@@ -36,6 +35,7 @@
     ];
 
     hardware.asahi.enable = true;
+
     hardware.asahi.peripheralFirmwareDirectory = let
       # Flakes run in "pure" evaluation mode on nix, making them unable to simply require the <ESP>/asahi partition.
       # Therefore, to make the system reproducible, it has to have the hash of the peripheral firmware directory.

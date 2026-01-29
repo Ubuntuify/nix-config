@@ -3,30 +3,24 @@
   inputs,
   outputs,
   ...
-}: let
-  mkLib = module: import module {inherit self inputs outputs;};
-in {
-  # Top-level functions (frequently used functions - or common enough that they get brought out)
-  __internal__ = mkLib ./__internal__;
+}: {
+  # Loads internal modules to be accessible top-level. Should not be used outside of
+  # functions that are contained within this folder.
+  __internal__ = import ./__internal__ {inherit self inputs outputs;};
 
-  inherit (outputs.lib.system) forEachSupportedSystem;
+  sysconfig = import ./sysconfig.nix {inherit self inputs outputs;};
+  home = import ./home.nix {inherit self inputs outputs;};
+  forEachSupportedSystem = let
+    supportedSystems = ["aarch64-darwin" "x86_64-linux" "aarch64-linux"];
+  in
+    f:
+      inputs.nixpkgs.lib.genAttrs supportedSystems (system:
+        f {
+          pkgs = import inputs.nixpkgs {inherit system;};
+        });
 
-  # Functions that are used to mess with systems (like creating system modules, creating system configurations
-  # and other related activities.)
-  #
-  # Often rely on the internal library, so if you are making changes there, check on the implementations located
-  # in ./system.nix and ./system-modules.nix
-  system = {
-    inherit (mkLib ./system.nix) forEachSupportedSystem mkNixos mkDarwin mkHomeEntry mkTopLevelHomeCfg;
-    inherit (mkLib ./system-modules.nix) mkMultiSystemModule mkDarwinModule mkNixosModule;
-  };
-
-  # Modules used by system configurations (also known as: NixOS or nix-darwin modules, though not all of them are
-  # system-agnostic). It's automatically loaded through haumae.
-  #
-  # Check its documentation at: https://nix-community.github.io/haumea/
-  modules = inputs.haumae.lib.load {
-    src = ../modules;
-    loader = inputs.haumae.lib.loaders.verbatim; # modules should be imported as-is, so they will have specialArgs, etc.
-  };
+  unsafeIf = bool: value:
+    if bool
+    then value
+    else {}; # this should only be used to get away from errors (hack)
 }

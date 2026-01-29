@@ -1,6 +1,9 @@
-{outputs, ...}: let
+{
+  outputs,
+  modules,
+  ...
+}: let
   inherit (outputs) overlays;
-  inherit (outputs.lib) modules;
 in {
   imports =
     [

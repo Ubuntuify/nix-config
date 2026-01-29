@@ -3,6 +3,6 @@
 in {
   imports = [
     internal # required library
-    outputs.lib.modules.wsl.wslg
+    outputs.lib.modules.hardware.wsl.wslg
   ];
 }
