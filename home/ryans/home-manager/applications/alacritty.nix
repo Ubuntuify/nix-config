@@ -13,7 +13,7 @@ in
       package = pkgs.alacritty-graphics; # use a fork with sixel support (display images)
       settings = lib.mkMerge [
         (builtins.fromTOML (builtins.readFile ../../../../themes/alacritty/rose-pine.toml))
-        (lib.mkIf pkgs.stdenv.isDarwin {
+        (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
           window.blur = true;
           window.opacity = 0.8;
         })

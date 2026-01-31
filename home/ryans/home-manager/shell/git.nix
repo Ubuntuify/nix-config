@@ -5,9 +5,10 @@
   ...
 } @ args: let
   pinentryPackage =
-    if !pkgs.stdenv.isDarwin
+    if !pkgs.stdenv.hostPlatform.isDarwin
     then pkgs.pinentry-tty
-    else pkgs.pinentry_mac;
+    else pkgs.pinentry_mac; # pinentry_mac can help provide Touch ID support with appropriate
+  # setup.
 in {
   programs.git = {
     enable = true;

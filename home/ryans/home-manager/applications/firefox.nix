@@ -10,7 +10,7 @@ in
   lib.mkIf cfg.machine.graphics (lib.mkMerge [
     {
       programs.firefox = let
-        firefox-addons = inputs.nur.legacyPackages.${pkgs.stdenv.system}.repos.rycee.firefox-addons;
+        firefox-addons = inputs.nur.legacyPackages.${pkgs.stdenv.hostPlatform.system}.repos.rycee.firefox-addons;
       in {
         enable = true;
 
@@ -168,7 +168,7 @@ in
         };
       };
     }
-    (lib.mkIf pkgs.stdenv.isLinux {
+    (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
       xdg.mimeApps = {
         enable = true;
         defaultApplications = {

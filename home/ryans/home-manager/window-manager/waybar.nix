@@ -8,7 +8,7 @@
 in
   lib.mkIf (builtins.all (self: self) [
     cfg.machine.graphics
-    pkgs.stdenv.isLinux
+    pkgs.stdenv.hostPlatform.isLinux
     (cfg.linux.window-manager != null)
   ]) {
     # When changing the font used in the style sheet, please change the font installed here.
