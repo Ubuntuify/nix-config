@@ -28,7 +28,7 @@
 in {
   mkDarwin = {
     hostname,
-    sysadmin ? "ryan",
+    sysadmin ? "ryan", # TODO: make it pass the entire config to handle more code here
     system ? "aarch64-darwin",
   }: let
     hostSpecificConfPath = builtins.toString ../hosts/darwin/${hostname}/default.nix;
@@ -63,16 +63,4 @@ in {
         ]
         ++ (outputs.lib.__internal__.getCommonModulePaths ../hosts/common/nixos) ++ universalCommonModules;
     };
-
-  mkHomeEntry = {
-    user,
-    options ? {},
-  }:
-    lib.mkMerge ((outputs.lib.home.mkHomeModules ../home user) ++ [{custom = options;}]);
-
-  mkTopLevelHomeCfg = {
-    user,
-    options ? {},
-  }:
-    outputs.lib.home.mkHomeConfiguration ../home user options;
 }
