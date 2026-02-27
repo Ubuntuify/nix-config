@@ -18,6 +18,7 @@ in {
     modules.fonts
     modules.networking
     modules.window-manager
+    modules.printing
     modules.display-manager.ly
   ];
 
