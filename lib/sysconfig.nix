@@ -12,7 +12,7 @@
   in
     lib.load {
       src = ../modules;
-      loader = lib.loaders.verbatim;
+      loader = lib.loaders.path;
     };
 
   # These are modules required to create Darwin and NixOS systems, mess with them wisely and expect

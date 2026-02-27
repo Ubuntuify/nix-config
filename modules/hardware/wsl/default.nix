@@ -2,35 +2,25 @@
 # this file.
 {
   inputs,
-  lib,
   config,
+  lib,
   ...
 }: let
   cfg = config.custom;
-in
-  lib.mkMerge [
-    {
-      imports = [inputs.nixos-wsl.nixosModules.default];
+in {
+  imports = [inputs.nixos-wsl.nixosModules.default];
 
-      config = {
-        wsl.enable = true;
-        wsl.defaultUser = config.custom.systemUser;
-      };
+  options.custom = {
+    wsl.graphics = lib.mkEnableOption "enable WSLg (hardware acceleration for GPU passthrough)";
+  };
 
-      options.custom = {
-        wsl.graphics = lib.mkOption "enable WSLg (hardware acceleration for GPU passthrough)";
-      };
-    }
-    (
-      lib.mkIf cfg.wsl.graphics {
-        wsl.useWindowsDriver = true;
-        wsl.startMenuLaunchers = true;
+  config = lib.mkDefault {
+    wsl.enable = true;
+    wsl.defaultUser = cfg.systemUser;
+    wsl.interop.includePath = true;
+    wsl.interop.register = true;
 
-        # Workaround https://github.com/nix-community/NixOS-WSL/issues/454
-        environment.sessionVariables.LD_LIBRARY_PATH = [
-          "/run/opengl-driver/lib/"
-        ];
-        environment.sessionVariables.GALLIUM_DRIVER = "d3d12";
-      }
-    )
-  ]
+    # use the default provided by the option
+    wsl.useWindowsDriver = config.custom.wsl.graphics;
+  };
+}

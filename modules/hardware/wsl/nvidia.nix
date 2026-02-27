@@ -18,6 +18,8 @@
 
   nixpkgs.config.cudaSupport = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   hardware.nvidia-container-toolkit = {
     enable = true;
     mount-nvidia-executables = false;
