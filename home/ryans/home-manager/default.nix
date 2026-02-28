@@ -8,8 +8,8 @@
     ./shell/neovim.nix
     ./shell/utilities.nix
     ./utilities/walker.nix
-    ./window-manager/sway.nix
-    ./window-manager/waybar.nix
+    ./window-manager/sway
+    ./window-manager/niri
   ];
 
   xdg.enable = true;

@@ -3,15 +3,12 @@
     # Machine-specific options, such as mitigating for low RAM or whether graphical applications should be enabled
     # in the config
     machine = {
-      graphics = let
-        isNixDarwin = builtins.hasAttr "darwinConfig" args;
-      in
-        lib.mkOption {
-          type = lib.types.bool;
-          description = "Whether to enable graphical applications, such as Firefox or Alacritty.";
-          default = args.nixosConfig.hardware.graphics.enable or isNixDarwin; # this is making an assumption that
-          # all nix-darwin setups are for development only and not for server use.
-        };
+      graphics = lib.mkOption {
+        type = lib.types.bool;
+        description = "Whether to enable graphical applications, such as Firefox or Alacritty.";
+        default = args.nixosConfig.hardware.graphics.enable or (builtins.hasAttr "darwinConfig" args); # this is making an assumption that
+        # all nix-darwin setups are for development only and not for server use.
+      };
 
       isLowRam = lib.mkEnableOption "some low RAM mitigation features, such as auto-tab-discard, etc.";
     };
