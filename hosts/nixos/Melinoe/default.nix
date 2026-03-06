@@ -36,7 +36,7 @@ in {
   services.xserver.enable = true;
   security.polkit.enable = true;
 
-  home-manager.users.${config.custom.systemUser} = outputs.lib.sysconfig.mkHomeEntry {
+  home-manager.users.${config.custom.systemUser} = outputs.lib.home.mkHomeEntry {
     user = config.custom.systemUser;
     options = {machine.graphics = true;};
   };
