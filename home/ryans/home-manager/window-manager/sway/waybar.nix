@@ -7,7 +7,7 @@
   cfg = config.custom;
 in
   lib.mkIf (builtins.all (self: self) [
-    cfg.machine.graphics
+    cfg.system.graphics
     pkgs.stdenv.hostPlatform.isLinux
     (cfg.linux.windowManager != null)
   ]) {

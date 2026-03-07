@@ -35,7 +35,7 @@ in {
     };
   };
 
-  home-manager.users.${user} = outputs.lib.home.mkHomeEntry {
+  home-manager.users.${user} = outputs.lib.home-manager.mkHomeEntry {
     user = "ryans"; # use *this* specific configuration
   };
 }

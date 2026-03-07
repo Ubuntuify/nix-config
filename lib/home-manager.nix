@@ -6,31 +6,31 @@
 }: let
   inherit (inputs.nixpkgs) lib;
 in {
-  mkUserModules = users: system: builtins.map (u: outputs.lib.__internal__.getUserCfgs u ../home system) users;
+  mkUserModules = users: system: map (u: outputs.lib.__internal__.getUserCfgs u ../home system) users;
 
   mkActiveHomeManagerConfigModules = users:
-    builtins.map (user: {
-      home-manager.users.${user} = outputs.lib.home.mkHomeEntry {inherit user;};
+    map (user: {
+      home-manager.users.${user} = outputs.lib.home-manager.mkHomeEntry {inherit user;};
     })
     users;
 
   mkUserModuleWithHomeManager = users: system:
     builtins.concatLists [
-      (outputs.lib.home.mkActiveHomeManagerConfigModules users)
-      (outputs.lib.home.mkUserModules users)
+      (outputs.lib.home-manager.mkActiveHomeManagerConfigModules users)
+      (outputs.lib.home-manager.mkUserModules users)
     ];
 
   mkHomeEntry = {
     user,
     options ? {},
   }:
-    lib.mkMerge ((outputs.lib.home.mkHomeModules ../home user) ++ [{custom = options;}]);
+    lib.mkMerge ((outputs.lib.home-manager.mkHomeModules ../home user) ++ [{custom = options;}]);
 
   mkTopLevelHomeCfg = {
     user,
     options ? {},
   }:
-    outputs.lib.home.mkHomeConfiguration ../home user options;
+    outputs.lib.home-manager.mkHomeConfiguration ../home user options;
 
   # Creates a home-manager configuration (to put out as outputs.homeConfiguration) using
   # included functions.

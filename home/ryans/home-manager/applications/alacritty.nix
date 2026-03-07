@@ -6,7 +6,7 @@
 }: let
   cfg = config.custom;
 in
-  lib.mkIf cfg.machine.graphics
+  lib.mkIf cfg.system.graphics
   {
     programs.alacritty = {
       enable = true;

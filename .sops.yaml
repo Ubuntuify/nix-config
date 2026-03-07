@@ -1,10 +1,10 @@
 keys:
   - &users:
-    - &aeacus age1qhtnlzmvhls3awahc67cptu8fru5p9x4yqcqcuv0qw90vcywlexstjgdfc
+    - &aeacus age16352qhwjh9p6na2aadc5p4a75vl04gmdcwpecpl7u3d7f3ktuqdqclk5ak
   - &hosts:
     - &melinoe age1csl4zmvjllk9h3lvlttzyxgp6gx8g0lknqda4qrwh959la55ze4q05jpwf
 creation_rules:
-  - path_regex: secrets/secrets.yaml$
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
     - age:
       - *aeacus

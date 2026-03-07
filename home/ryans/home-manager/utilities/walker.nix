@@ -10,7 +10,7 @@ in {
 
   programs.walker.enable = builtins.all (s: s) [
     pkgs.stdenv.hostPlatform.isLinux
-    cfg.machine.graphics
+    cfg.system.graphics
     (cfg.linux.windowManager != null)
   ];
 }

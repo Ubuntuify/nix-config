@@ -19,6 +19,8 @@ in {
     modules.window-manager
     modules.printing
     modules.display-manager.ly
+    modules.security.sops
+    (outputs.lib.users.getNixUserModule "ryans")
   ];
 
   # Options required for Asahi (apple-silicon)'s hardware module, such as providing the firmware hash
@@ -34,18 +36,7 @@ in {
 
   services.xserver.enable = true;
   security.polkit.enable = true;
-
-  home-manager.users.${config.custom.systemUser} = outputs.lib.home.mkHomeEntry {
-    user = config.custom.systemUser;
-    options = {
-      machine.graphics = true;
-      linux.windowManager = "niri";
-    };
-  };
-
   programs.niri.enable = true;
-
-  users.mutableUsers = true;
 
   system.stateVersion = "25.11";
 }

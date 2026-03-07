@@ -31,7 +31,7 @@ in {
     sysadmin ? "ryan", # TODO: make it pass the entire config to handle more code here
     system ? "aarch64-darwin",
   }: let
-    hostSpecificConfPath = builtins.toString ../hosts/darwin/${hostname}/default.nix;
+    hostSpecificConfPath = toString ../hosts/darwin/${hostname}/default.nix;
     hostSpecificConf =
       if builtins.pathExists hostSpecificConfPath
       then hostSpecificConfPath

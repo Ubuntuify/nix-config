@@ -2,7 +2,7 @@
   options.custom = {
     # Machine-specific options, such as mitigating for low RAM or whether graphical applications should be enabled
     # in the config
-    machine = {
+    system = {
       graphics = lib.mkOption {
         type = lib.types.bool;
         description = "Whether to enable graphical applications, such as Firefox or Alacritty.";

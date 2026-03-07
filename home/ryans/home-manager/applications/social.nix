@@ -4,7 +4,7 @@
   config,
   ...
 }: {
-  home.packages = lib.mkIf config.custom.machine.graphics [
+  home.packages = lib.mkIf config.custom.system.graphics [
     pkgs.legcord
   ];
 }

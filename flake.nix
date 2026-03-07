@@ -11,22 +11,12 @@
 
     # Main system components (i.e. NixOS, nix-darwin, etc.)
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-darwin = {
-      url = "github:nix-darwin/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs"; # These stop nix from downloading multiple instances of nixpkgs
-    };
-    nix-on-droid = {
-      url = "github:nix-community/nix-on-droid/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager"; # nix-on-droid implements its own home-manager plugin, and
-      # may not have the updates that home-manager currently has, lock it to prevent issues with current.
-    };
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs"; # These stop nix from downloading multiple instances of nixpkgs
 
     # Secrets manager
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     # User components (such as for: setting up home directories, and homebrew)
     home-manager = {

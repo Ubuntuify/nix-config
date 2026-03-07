@@ -7,7 +7,7 @@
 }: let
   cfg = config.custom;
 in
-  lib.mkIf cfg.machine.graphics (lib.mkMerge [
+  lib.mkIf cfg.system.graphics (lib.mkMerge [
     {
       programs.firefox = let
         firefox-addons = inputs.nur.legacyPackages.${pkgs.stdenv.hostPlatform.system}.repos.rycee.firefox-addons;
@@ -50,7 +50,7 @@ in
                 github-file-icons
                 lovely-forks
               ]
-              ++ lib.optionals cfg.machine.isLowRam [auto-tab-discard];
+              ++ lib.optionals cfg.system.isLowRam [auto-tab-discard];
             settings = {
               "uBlock0@raymondhill.net" = {
                 force = true;
@@ -156,7 +156,7 @@ in
             "browser.tabs.insertRelatedAfterCurrent" = false;
             "general.smoothScroll.msdPhysics.enabled" = true;
             "browser.tabs.min_inactive_duration_before_unload" =
-              if cfg.machine.isLowRam # check if the system is a Low RAM machine
+              if cfg.system.isLowRam # check if the system is a Low RAM machine
               then 60000 # unload tabs after 1 minute.
               else 90000; # unload tabs after 1:30 minutes.
             "gfx.font_rendering.cleartype_params.rendering_mode" = 5;

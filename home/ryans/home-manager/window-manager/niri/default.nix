@@ -8,7 +8,7 @@
 lib.mkIf (
   builtins.all (s: s) [
     pkgs.stdenv.hostPlatform.isLinux
-    config.custom.machine.graphics
+    config.custom.system.graphics
     (config.custom.linux.windowManager == "niri")
   ]
 ) {

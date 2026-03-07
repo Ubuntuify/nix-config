@@ -8,7 +8,7 @@
 in
   lib.mkIf (builtins.all (self: self) [
     pkgs.stdenv.hostPlatform.isLinux
-    cfg.machine.graphics
+    cfg.system.graphics
     (cfg.linux.windowManager == "sway")
   ]) {
     home.packages = with pkgs; [
