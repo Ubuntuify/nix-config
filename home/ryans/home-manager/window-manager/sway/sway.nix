@@ -9,10 +9,9 @@ in
   lib.mkIf (builtins.all (self: self) [
     pkgs.stdenv.hostPlatform.isLinux
     cfg.machine.graphics
-    (cfg.linux.window-manager == "sway")
+    (cfg.linux.windowManager == "sway")
   ]) {
     home.packages = with pkgs; [
-      walker
       autotiling-rs
       mako
       xwayland-satellite
@@ -55,7 +54,7 @@ in
         output = {
           "*" = {
             # sets background to all screens
-            background = "${../../../../themes/background/pink/astronaut-space.png} fill";
+            background = "${../../background/pink/astronaut-space.png} fill";
           };
 
           eDP-1 = {

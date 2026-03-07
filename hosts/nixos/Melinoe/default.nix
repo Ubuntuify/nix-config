@@ -41,6 +41,8 @@ in {
     options = {machine.graphics = true;};
   };
 
+  programs.niri.enable = true;
+
   users.mutableUsers = true;
 
   system.stateVersion = "25.11";

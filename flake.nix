@@ -38,6 +38,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    elephant = {
+      url = "github:abenz1267/elephant";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    walker = {
+      url = "github:abenz1267/walker";
+      inputs.elephant.follows = "elephant";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Support modules (modules that connect to main system components to add patches for NixOS to work)
     nixos-wsl = {
@@ -53,13 +62,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Alternate repositories
+    # Alternate repositories (such as repositories for Firefox addons, etc.)
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Flake components
+    # Flake components (components used by the flake for management, etc.)
     haumae = {
       url = "github:nix-community/haumea/v0.2.2";
       inputs.nixpkgs.follows = "nixpkgs";

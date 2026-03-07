@@ -5,7 +5,6 @@
 
     settings = {
       icons = true;
-      sixel = true;
       drawbox = true;
       mouse = true;
     };

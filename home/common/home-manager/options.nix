@@ -15,7 +15,7 @@
 
     # Linux-specific options, these have no effect when not on a Linux machine.
     linux = {
-      window-manager = lib.mkOption {
+      windowManager = lib.mkOption {
         type = lib.types.enum ["sway" "hyprland" null];
         description = "Which window manager (and respective config) to use.";
         default = "sway";

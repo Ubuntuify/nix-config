@@ -12,7 +12,7 @@ in
       enable = true;
       package = pkgs.alacritty-graphics; # use a fork with sixel support (display images)
       settings = lib.mkMerge [
-        (builtins.fromTOML (builtins.readFile ../../../../themes/alacritty/rose-pine.toml))
+        (fromTOML (builtins.readFile ../../../../themes/alacritty/rose-pine.toml))
         (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
           window.blur = true;
           window.opacity = 0.8;
@@ -21,8 +21,8 @@ in
           window = {
             dynamic_padding = true;
             padding = {
-              x = 5;
-              y = 5;
+              x = 10;
+              y = 10;
             };
           };
 
@@ -33,7 +33,9 @@ in
             multiplier = 3;
           };
 
-          font = {
+          font = let
+            family = "IosevkaTerm Nerd Font Mono";
+          in {
             size = 12;
 
             offset = {
@@ -47,22 +49,22 @@ in
             };
 
             normal = {
-              family = "FantasqueSansM Nerd Font Mono";
+              inherit family;
               style = "Regular";
             };
 
             bold = {
-              family = "FantasqueSansM Nerd Font Mono";
+              inherit family;
               style = "Bold";
             };
 
             italic = {
-              family = "FantasqueSansM Nerd Font Mono";
+              inherit family;
               style = "Italic";
             };
 
             bold_italic = {
-              family = "FantasqueSansM Nerd Font Mono";
+              inherit family;
               style = "Bold Italic";
             };
           };
@@ -74,5 +76,5 @@ in
       ];
     };
 
-    home.packages = [pkgs.nerd-fonts.fantasque-sans-mono];
+    home.packages = [pkgs.nerd-fonts.iosevka-term];
   }

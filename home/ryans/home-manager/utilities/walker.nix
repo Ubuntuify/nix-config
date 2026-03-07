@@ -1,15 +1,16 @@
 {
   pkgs,
-  lib,
+  inputs,
   config,
   ...
 }: let
   cfg = config.custom;
-in
-  lib.mkIf (builtins.all (self: self) [
+in {
+  imports = [inputs.walker.homeManagerModules.default];
+
+  programs.walker.enable = builtins.all (s: s) [
     pkgs.stdenv.hostPlatform.isLinux
     cfg.machine.graphics
-    (cfg.linux.window-manager != null)
-  ]) {
-    services.walker = {enable = true;};
-  }
+    (cfg.linux.windowManager != null)
+  ];
+}
