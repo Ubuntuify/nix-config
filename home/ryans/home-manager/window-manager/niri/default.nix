@@ -13,7 +13,6 @@ lib.mkIf (
   home.packages = with pkgs; [
     mpvpaper
     nemo
-    swww
   ];
 
   # Link in config.kdl (until an upstream module is made for home-manager)
