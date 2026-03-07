@@ -164,6 +164,7 @@ in
             "dom.animations.offscreen-throttling" = false;
             "browser.tabs.loadDivertedInBackground" = true;
             "browser.tabs.loadInBackground" = false;
+            "sidebar.verticalTabs" = true;
           };
         };
       };

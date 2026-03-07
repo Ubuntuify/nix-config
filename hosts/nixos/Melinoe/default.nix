@@ -37,7 +37,10 @@ in {
 
   home-manager.users.${config.custom.systemUser} = outputs.lib.home.mkHomeEntry {
     user = config.custom.systemUser;
-    options = {machine.graphics = true;};
+    options = {
+      machine.graphics = true;
+      linux.windowManager = "niri";
+    };
   };
 
   programs.niri.enable = true;

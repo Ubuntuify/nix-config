@@ -270,10 +270,10 @@ layout {
 spawn-at-startup "waybar"
 
 // Spawn walker application service for fast startups
-spawn-at-startup "walker --gapplication-service"
+spawn-at-startup "walker" "--gapplication-service"
 
 // Wallpaper service
-spawn-at-startup "mpvpaper ALL -o 'loop autofit=100%x100% panscan=1.0' -s ~/.config/wallpaper.mp4"
+spawn-sh-at-startup "mpvpaper ALL -o 'loop autofit=100%x100% panscan=1.0' -s -f ~/.config/wallpaper.mp4"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -303,10 +303,42 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 // https://yalter.github.io/niri/Configuration:-Animations
 animations {
     // Slow down all animations by this factor. Values below 1 speed them up instead.
-    slowdown 0.8
+    slowdown 1.25
+
+    overview-open-close {
+        spring damping-ratio=1.0 stiffness=500 epsilon=0.00001
+    }
+
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=300 epsilon=0.00001
+    }
 
     workspace-switch {
-        spring damping-ratio=1.00 stiffness=1000 epsilon=0.0001
+        spring damping-ratio=1.0 stiffness=300 epsilon=0.00001
+    }
+
+    window-open {
+        spring damping-ratio=1.0 stiffness=500 epsilon=0.00001
+    }
+
+    window-close {
+        spring damping-ratio=1.0 stiffness=300 epsilon=0.00001
+    }
+
+    window-movement {
+        spring damping-ratio=1.0 stiffness=400 epsilon=0.00001
+    }
+
+    window-resize {
+        spring damping-ratio=1.0 stiffness=400 epsilon=0.00001
+    }
+
+    config-notification-open-close {
+        spring damping-ratio=1.0 stiffness=600 epsilon=0.0001
+    }
+
+    exit-confirmation-open-close {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
     }
 }
 
@@ -602,12 +634,11 @@ binds {
     // a matching layout switch hotkey configured in xkb options above.
     // Having both at once on the same hotkey will break the switching,
     // since it will switch twice upon pressing the hotkey (once by xkb, once by niri).
-    // Mod+Space       { switch-layout "next"; }
-    // Mod+Shift+Space { switch-layout "prev"; }
+    Mod+Shift+Space { switch-layout "next"; }
 
-    Print { screenshot; }
-    Ctrl+Print { screenshot-screen; }
-    Alt+Print { screenshot-window; }
+    F12 { screenshot; }
+    Ctrl+F12 { screenshot-screen; }
+    Alt+F12 { screenshot-window; }
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here

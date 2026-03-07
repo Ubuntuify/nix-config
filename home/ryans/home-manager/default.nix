@@ -2,6 +2,7 @@
   imports = [
     ./applications/alacritty.nix
     ./applications/firefox.nix
+    ./applications/social.nix
     ./shell/fish.nix
     ./shell/git.nix
     ./shell/lf.nix
