@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  nixosConfig,
   ...
 }:
 lib.mkIf (

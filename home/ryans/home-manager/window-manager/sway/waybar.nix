@@ -9,7 +9,7 @@ in
   lib.mkIf (builtins.all (self: self) [
     cfg.machine.graphics
     pkgs.stdenv.hostPlatform.isLinux
-    (cfg.linux.windowManager == "sway")
+    (cfg.linux.windowManager != null)
   ]) {
     # When changing the font used in the style sheet, please change the font installed here.
     home.packages = with pkgs; [
