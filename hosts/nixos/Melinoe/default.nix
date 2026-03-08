@@ -12,14 +12,15 @@ in {
     ./system-specific/swap.nix
     modules.hardware.asahi
     modules.security.sops
-    modules.audio
-    modules.drawing
-    modules.fonts
-    modules.networking
+    modules.system.audio
+    modules.system.fonts
+    modules.system.networking
+    modules.system.printing
+    modules.system.bluetooth
     modules.window-manager
-    modules.printing
     modules.display-manager.ly
     modules.security.sops
+    modules.drawing
     (outputs.lib.users.getNixUserModule "ryans")
   ];
 

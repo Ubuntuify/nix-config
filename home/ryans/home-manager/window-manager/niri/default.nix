@@ -20,4 +20,14 @@ lib.mkIf (
 
   # Link in config.kdl (until an upstream module is made for home-manager)
   xdg.configFile."niri/config.kdl".source = ./config.kdl;
+
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "la-capitaine-icon-theme";
+      package = pkgs.la-capitaine-icon-theme;
+    };
+    theme.name = "squared-gtk";
+    theme.package = pkgs.callPackage ../../../../../packages/themes/squared-gtk.nix {};
+  };
 }

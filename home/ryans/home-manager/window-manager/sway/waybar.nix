@@ -137,7 +137,7 @@ in
             format = "{icon} {volume}%";
             format-muted = "";
             on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-            on-click-right = "flatpak run com.saivert.pwvucontrol";
+            on-click-right = "pwvucontrol";
             format-icons = {
               default = [
                 ""
