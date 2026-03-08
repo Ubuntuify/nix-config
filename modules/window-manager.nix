@@ -20,8 +20,9 @@ with lib; let
 in
   mkMerge [
     # Do a check if home-manager configures a specific window manager, and if so, enable the appropriate NixOS feature
-    (makeWindowManagerConfig "sway")
-    (makeWindowManagerConfig "hyprland")
+    # TODO: causes infinite recursion for some reason now?
+    #(makeWindowManagerConfig "sway")
+    #(makeWindowManagerConfig "hyprland")
     {
       environment.sessionVariables.NIXOS_OZONE_WL = 1; # enable wayland support for electron/chromium based apps.
     }

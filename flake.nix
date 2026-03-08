@@ -20,48 +20,48 @@
 
     # User components (such as for: setting up home directories, and homebrew)
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager"; # sets up home applications and their settings
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nvf = {
-      url = "github:notashelf/nvf";
+      url = "github:notashelf/nvf"; # setups nvim with appropriate settings for development
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew"; # homebrew for nix-darwin
     elephant = {
-      url = "github:abenz1267/elephant";
+      url = "github:abenz1267/elephant"; # elephant is a dependency of walker
       inputs.nixpkgs.follows = "nixpkgs";
     };
     walker = {
-      url = "github:abenz1267/walker";
+      url = "github:abenz1267/walker"; # walker is a launcher and dmenu subtitute, used for launching apps
       inputs.elephant.follows = "elephant";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Support modules (modules that connect to main system components to add patches for NixOS to work)
     nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
+      url = "github:nix-community/NixOS-WSL/main"; # for windows subsystem for linux (weird name), can build tarballs
       inputs.nixpkgs.follows = "nixpkgs";
     };
     apple-silicon = {
-      url = "github:nix-community/nixos-apple-silicon/main";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/nixos-apple-silicon/main"; # asahi linux, this comes with a module defined for ease
+      inputs.nixpkgs.follows = "nixpkgs"; # of use.
     };
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+      url = "github:nix-community/lanzaboote/v0.4.2"; # secure boot
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Alternate repositories (such as repositories for Firefox addons, etc.)
     nur = {
-      url = "github:nix-community/NUR";
+      url = "github:nix-community/NUR"; # used this primarily for Firefox addons, but can be used for other things
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Flake components (components used by the flake for management, etc.)
     haumae = {
-      url = "github:nix-community/haumea/v0.2.2";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/haumea/v0.2.2"; # might want to move away from this, but auto-imports modules like
+      inputs.nixpkgs.follows = "nixpkgs"; # how you would do it in other programming languages
     };
   };
 

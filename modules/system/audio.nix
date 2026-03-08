@@ -1,4 +1,6 @@
-{
+{pkgs, ...}: {
+  environment.systemPackages = [pkgs.pwvucontrol];
+
   services.pipewire = {
     enable = true;
 
@@ -6,5 +8,8 @@
     # Other options include JACK, which are disabled here to save on space.
     pulse.enable = true;
     alsa.enable = true;
+
+    # Not recommended, but I want systemwide audio.
+    #systemWide = true;
   };
 }
