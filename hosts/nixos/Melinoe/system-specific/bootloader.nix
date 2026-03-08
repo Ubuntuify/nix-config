@@ -1,9 +1,12 @@
-{
+{pkgs, ...}: {
   boot = {
     supportedFilesystems = ["btrfs"];
-    loader.systemd-boot = {
+
+    loader.grub = {
       enable = true;
-      configurationLimit = 3;
+      configurationLimit = 5;
+      font = "${pkgs.iosevka}/share/fonts/truetype/Iosevka-Medium.ttf";
+      fontSize = 32;
     };
   };
 }
