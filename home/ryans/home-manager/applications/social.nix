@@ -4,7 +4,11 @@
   config,
   ...
 }: {
-  home.packages = lib.mkIf config.custom.system.graphics [
-    pkgs.legcord
-  ];
+  home.packages =
+    lib.mkIf (builtins.all (s: s) [
+      pkgs.stdenv.hostPlatform.isLinux
+      config.custom.system.graphics
+    ]) [
+      pkgs.legcord
+    ];
 }
