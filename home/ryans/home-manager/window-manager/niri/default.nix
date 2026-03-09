@@ -22,9 +22,21 @@ lib.mkIf (
     nur.repos.sagikazarmark.sf-pro
   ];
 
+  xdg.configFile."background.mp4".source = ../../background/orange/sunset-beach.mp4;
+  home.file.".local/share/fonts/hyprlock/Steelfish Outline Regular.otf".source = ./hyprlock/steelfish.outline-regular.otf;
+
   programs.hyprlock = {
     enable = true;
     settings = {
+      background = {
+        path = "${../../background/orange/sunset-beach-still.png}";
+        blur_passes = 3;
+        contrast = 0.8916;
+        brightness = 0.8172;
+        vibrancy = 0.1696;
+        vibrancy_darkness = 0.0;
+      };
+
       general = {
         no_fade_in = false;
         disable_loading_bar = false;
