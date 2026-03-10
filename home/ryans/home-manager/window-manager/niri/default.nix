@@ -19,6 +19,7 @@ lib.mkIf (
     nemo
     mpvpaper
     xwayland-satellite
+    socat
     nur.repos.sagikazarmark.sf-pro
   ];
 

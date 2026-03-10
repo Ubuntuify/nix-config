@@ -272,7 +272,7 @@ spawn-at-startup "waybar"
 spawn-at-startup "walker" "--gapplication-service"
 
 // Wallpaper service
-spawn-sh-at-startup "mpvpaper ALL -o 'loop autofit=100%x100% panscan=1.0 sound=off' -s -f ~/.config/wallpaper.mp4"
+spawn-sh-at-startup "mpvpaper ALL -o 'loop autofit=100%x100% panscan=1.0 no-audio input-ipc-server=/tmp/mpv-socket' -s -f ~/.config/wallpaper.mp4"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -403,9 +403,6 @@ binds {
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
-    // For example, this is a standard bind to toggle the screen reader (orca).
-    Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
-
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
     // Using spawn-sh allows to pass multiple arguments together with the command.
@@ -499,6 +496,8 @@ binds {
     Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
     Mod+Ctrl+U         { move-column-to-workspace-down; }
     Mod+Ctrl+I         { move-column-to-workspace-up; }
+
+    Mod+P              { spawn-sh "echo 'cycle pause' | socat - /tmp/mpv-socket"; }
 
     // Alternatively, there are commands to move just a single window:
     // Mod+Ctrl+Page_Down { move-window-to-workspace-down; }
