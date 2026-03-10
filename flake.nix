@@ -37,6 +37,10 @@
       inputs.elephant.follows = "elephant";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sysc-greet = {
+      url = "github:Nomadcxx/sysc-greet";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Support modules (modules that connect to main system components to add patches for NixOS to work)
     nixos-wsl = {

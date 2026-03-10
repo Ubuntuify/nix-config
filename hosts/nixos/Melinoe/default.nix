@@ -18,7 +18,7 @@ in {
     modules.system.printing
     modules.system.bluetooth
     modules.window-manager
-    modules.display-manager.ly
+    modules.display-manager.sysc-greet
     modules.security.sops
     modules.drawing
     (outputs.lib.users.getNixUserModule "ryans")

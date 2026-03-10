@@ -13,11 +13,14 @@
   # for converting keys into sops keys, so set this as default.
 
   sops = {
-    defaultSopsFile = ../../secrets/passwords.yaml;
+    defaultSopsFile = ../../secrets/secrets.yaml;
     validateSopsFiles = true;
 
     secrets = {
-      ryans = {};
+      "passwords/ryans" = {
+        neededForUsers = true; # TODO: don't hard-code this, generate depending on what is in the home directory
+      };
+      "private-keys/ryans" = {};
     };
 
     age = {

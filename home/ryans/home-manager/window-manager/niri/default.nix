@@ -22,7 +22,7 @@ lib.mkIf (
     nur.repos.sagikazarmark.sf-pro
   ];
 
-  xdg.configFile."background.mp4".source = ../../background/orange/sunset-beach.mp4;
+  xdg.configFile."wallpaper.mp4".source = ../../background/orange/sunset-beach.mp4;
   home.file.".local/share/fonts/hyprlock/Steelfish Outline Regular.otf".source = ./hyprlock/steelfish.outline-regular.otf;
 
   programs.hyprlock = {

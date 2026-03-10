@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   environment.systemPackages = [pkgs.pwvucontrol];
 
   services.pipewire = {
@@ -10,6 +14,12 @@
     alsa.enable = true;
 
     # Not recommended, but I want systemwide audio.
-    #systemWide = true;
+    #systemWide = lib.mkDefault true;
   };
+
+  # Support for Easy Effects to improve sound quality.
+  programs.dconf.enable = true;
+  home-manager.sharedModules = [
+    {services.easyeffects.enable = lib.mkDefault true;}
+  ];
 }

@@ -9,8 +9,12 @@ in
     {
       users.users.ryans = {
         isNormalUser = true;
-        hashedPasswordFile = lib.mkIf (!config.users.mutableUsers) config.sops.secrets.users.ryans.path;
-        extraGroups = ["wheel" "pipewire"];
+        hashedPasswordFile = lib.mkIf (!config.users.mutableUsers) config.sops.secrets.users."passwords/ryans".path;
+        extraGroups = ["wheel"];
+
+        openssh.authorizedKeys.keys = [
+          (builtins.readFile ../../../secrets/keys/ryans/id_ed25519.pub)
+        ];
       };
 
       home-manager.users.ryans = outputs.lib.home-manager.mkHomeEntry {
@@ -22,7 +26,7 @@ in
     # sops-nix security plugin
     (lib.mkIf (builtins.hasAttr "sops" config) {
       sops.secrets = {
-        ryans.neededForUsers = true;
+        "passwords/ryans".neededForUsers = true;
       };
     })
   ]
